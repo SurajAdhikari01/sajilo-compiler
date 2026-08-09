@@ -65,6 +65,7 @@ enum class TokenName {
   LAIJAU,
   SURU,
   DEU,
+  NISKI,
 
   // Types
   INT,

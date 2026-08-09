@@ -1,4 +1,5 @@
 #include "lexer.hpp"
+#include "parser.hpp"
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -19,6 +20,10 @@ int main(int argc, char *argv[]) {
   Lexer lexer;
   lexer.set_sourceCode(content);
   lexer.tokenize();
+
+  Parser parser;
+  parser.set_tokens(lexer.get_tokens());
+  parser.parse();
 
   return 0;
 }

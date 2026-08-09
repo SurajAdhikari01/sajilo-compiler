@@ -6,7 +6,7 @@
 class Lexer {
 public:
   void tokenize();
-  const std::vector<Token> &get_tokens() const;
+  std::vector<Token> &get_tokens() { return tokens; }
   void set_sourceCode(std::string &source_code);
 
 private:
