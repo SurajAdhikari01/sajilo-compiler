@@ -12,6 +12,7 @@ public:
   bool expect_token(TokenName tokname) {
     return (peek_token().token == tokname);
   }
+  const Token &get_current_token() { return tokens[index]; }
   void consume_token() { ++index; };
   bool is_valid() { return index < tokens.size(); }
   void set_tokens(std::vector<Token> &tokens) {

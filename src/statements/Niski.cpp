@@ -1,35 +1,35 @@
-#include "statements/Exit.hpp"
+#include "statements/Niski.hpp"
+#include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <iostream>
 #include <memory>
-#include <sstream>
 #include <string>
-std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
+std::unique_ptr<Statements> Niski::parse_niski(Parser &parser) {
   switch (parser.peek_token_name()) {
   case TokenName::LEFT_PAREN: {
-    return parse_exit_with_braces(parser);
+    return parse_niski_with_braces(parser);
   }
   case TokenName::INT_LITERAL: {
-    return parse_exit_without_braces(parser);
+    return parse_niski_without_braces(parser);
   }
   default:
     return nullptr;
   }
 };
 
-std::unique_ptr<Statements> Exit::parse_exit_with_braces(Parser &parser) {
+std::unique_ptr<Statements> Niski::parse_niski_with_braces(Parser &parser) {
   parser.consume_token();
   if (!parser.expect_token(TokenName::INT_LITERAL)) {
     return nullptr;
   }
-  int dummy_exit_code = 1;
+  int dummy_niski_code = 1;
   {
     std::string string(parser.peek_token().value);
     try {
-      dummy_exit_code = std::stoi(string);
+      dummy_niski_code = std::stoi(string);
     } catch (...) {
-      dummy_exit_code = 1;
+      dummy_niski_code = 1;
     }
   }
   parser.consume_token();
@@ -42,22 +42,21 @@ std::unique_ptr<Statements> Exit::parse_exit_with_braces(Parser &parser) {
     return nullptr;
   }
   parser.consume_token();
-  std::cout << "suraj\n";
 
-  return std::make_unique<Exit>(dummy_exit_code);
+  return std::make_unique<Niski>(dummy_niski_code);
 }
-std::unique_ptr<Statements> Exit::parse_exit_without_braces(Parser &parser) {
+std::unique_ptr<Statements> Niski::parse_niski_without_braces(Parser &parser) {
   parser.consume_token();
   if (!parser.expect_token(TokenName::INT_LITERAL)) {
     return nullptr;
   }
-  int dummy_exit_code = 1;
+  int dummy_niski_code = 1;
   {
     std::string string(parser.peek_token().value);
     try {
-      dummy_exit_code = std::stoi(string);
+      dummy_niski_code = std::stoi(string);
     } catch (...) {
-      dummy_exit_code = 1;
+      dummy_niski_code = 1;
     }
   }
 
@@ -67,13 +66,12 @@ std::unique_ptr<Statements> Exit::parse_exit_without_braces(Parser &parser) {
     return nullptr;
   }
   parser.consume_token();
-  std::cout << "suraj\n";
 
-  return std::make_unique<Exit>(dummy_exit_code);
+  return std::make_unique<Niski>(dummy_niski_code);
 }
-void Exit::generate(std::stringstream &ss) {
+void Niski::generate(CodeGenContext &context) {
   std::cout << "suraj\n";
-  ss << "mov rdi, " << this->exitCode << "\n";
-  ss << "mov rax, 60\n";
-  ss << "syscall\n";
+  context.code << "mov rdi, " << this->niskiCode << "\n"
+               << "mov rax, 60\n"
+               << "syscall\n";
 }

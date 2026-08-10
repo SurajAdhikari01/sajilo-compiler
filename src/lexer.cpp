@@ -1,6 +1,5 @@
 #include "lexer.hpp"
 #include "token.hpp"
-#include <iostream>
 #include <string_view>
 
 static bool isKeyword(const std::string_view value, Token &token) {
@@ -149,7 +148,6 @@ void Lexer::process_string_literal() {
   if (peek() == '"') {
     add_token({TokenName::STRING_LITERAL});
     consume();
-    std::cout << std::endl;
     return;
   }
 
@@ -159,7 +157,7 @@ void Lexer::process_string_literal() {
     consume();
   }
   buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
-  std::cout << buffer << std::endl;
+  add_token({TokenName::STRING_LITERAL, buffer});
 
   consume();
   return;

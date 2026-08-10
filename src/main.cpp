@@ -11,18 +11,22 @@ int main(int argc, char *argv[]) {
   }
   std::string filename(argv[1]);
   std::ifstream file(filename);
+
   if (!file.is_open()) {
     return EXIT_FAILURE;
   }
   std::stringstream buffer;
   buffer << file.rdbuf();
   std::string content = buffer.str();
+  std::cout << content;
   Lexer lexer;
   lexer.set_sourceCode(content);
   lexer.tokenize();
+  std::cout << lexer.get_tokens().size();
 
   Parser parser;
   parser.set_tokens(lexer.get_tokens());
+
   parser.parse();
 
   return 0;
