@@ -1,6 +1,7 @@
 #pragma once
 #include "statements/statements.hpp"
 #include "token.hpp"
+#include <cstddef>
 #include <memory>
 #include <utility>
 #include <vector>
@@ -15,6 +16,7 @@ public:
   const Token &get_current_token() { return tokens[index]; }
   void consume_token() { ++index; };
   bool is_valid() { return index < tokens.size(); }
+  bool is_valid(size_t i) { return i < tokens.size(); }
   void set_tokens(std::vector<Token> &tokens) {
     this->tokens = std::move(tokens);
   }
@@ -25,10 +27,13 @@ public:
       statements.push_back(std::move(statement));
     }
   }
+  size_t get_current_position() { return index; }
+  Token get_token(size_t i) { return is_valid(i) ? tokens[i] : EOT; }
 
 private:
 private:
   std::vector<Token> tokens;
   size_t index;
   std::vector<std::unique_ptr<Statements>> statements;
+  Token EOT = {TokenName::NONE};
 };

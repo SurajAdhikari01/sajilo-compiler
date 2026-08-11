@@ -7,6 +7,9 @@ class Bol : public Statements {
 public:
   Bol() : bolText("") {}
   Bol(std::string boltext) : bolText(boltext) {}
+  Bol(std::string boltext, bool isLiteral)
+      : bolText(boltext), isLiteral(isLiteral) {}
+
   static std::unique_ptr<Statements> parse_bol(Parser &parser);
   virtual void generate(CodeGenContext &) override;
 
@@ -16,4 +19,5 @@ private:
 
 private:
   std::string bolText;
+  bool isLiteral = true;
 };

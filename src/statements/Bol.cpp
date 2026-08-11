@@ -1,5 +1,6 @@
 #include "statements/Bol.hpp"
 #include "statements/statements.hpp"
+#include "symbolTable.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
@@ -33,11 +34,32 @@ std::unique_ptr<Statements> Bol::parse_bol_string(Parser &parser) {
   return std::make_unique<Bol>(dummy_bol_text);
 }
 std::unique_ptr<Statements> Bol::parse_bol_variable(Parser &parser) {
-  return nullptr;
+  parser.consume_token();
+  const Token &token = parser.get_current_token();
+  std::string dummy_bol_text(token.value);
+
+  if (!parser.expect_token(TokenName::SEMICOLON)) {
+    return nullptr;
+  }
+  parser.consume_token();
+
+  return std::make_unique<Bol>(dummy_bol_text, false);
 }
 void Bol::generate(CodeGenContext &context) {
   std::string label = "str" + std::to_string(context.lable++); // str0
-  context.data << label << " db \"" << this->bolText << "\" , 10\n"
+  std::string data;
+  if (isLiteral) {
+    data = bolText;
+
+  } else {
+    auto opt_dec_data = get_table().get(bolText);
+    if (opt_dec_data.has_value()) {
+      auto dec_data = opt_dec_data.value();
+      data = dec_data.value;
+    }
+  }
+
+  context.data << label << " db \"" << data << "\" , 10\n"
                << label << "_len equ $ - " << label << "\n";
 
   context.code << "mov rax, 1\n"

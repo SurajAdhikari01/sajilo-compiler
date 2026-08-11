@@ -70,7 +70,6 @@ std::unique_ptr<Statements> Niski::parse_niski_without_braces(Parser &parser) {
   return std::make_unique<Niski>(dummy_niski_code);
 }
 void Niski::generate(CodeGenContext &context) {
-  std::cout << "suraj\n";
   context.code << "mov rdi, " << this->niskiCode << "\n"
                << "mov rax, 60\n"
                << "syscall\n";

@@ -1,5 +1,6 @@
 #include "parser.hpp"
 #include "statements/Bol.hpp"
+#include "statements/Manau.hpp"
 #include "statements/Niski.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
@@ -11,10 +12,11 @@ void Parser::parse() {
 
   for (; index < tokens.size(); ++index) {
 
-    std::cout << tokens[index].value << std::endl;
-    scan_token(tokens[index].token);
+    if (!scan_token(tokens[index].token)) {
+      std::cerr << "Syntax error\n" << index;
+      return;
+    }
   }
-  std::cout << statements.size() << std::endl;
   CodeGenContext context;
   context.code << "_start:\n";
   for (const auto &ptr : statements) {
@@ -36,31 +38,25 @@ void Parser::parse() {
 }
 
 bool Parser::scan_token(TokenName tokname) {
-
-  std::cout << "something something\n";
-
   switch (tokname) {
   case TokenName::NISKI: {
-    std::cout << "something something\n";
-
     auto ptr = Niski::parse_niski(*this);
-    if (!ptr) {
-      std::cout << "something something\n";
-    }
     add_statement(ptr);
     return true;
   }
   case TokenName::BOL: {
-    std::cout << "something something two\n";
-
     auto ptr = Bol::parse_bol(*this);
-    if (!ptr) {
-      std::cout << "something something two\n";
-    }
     add_statement(ptr);
     return true;
   }
+  case TokenName::MANAU: {
+    auto ptr = Manau::parse_manau(*this);
+    add_statement(ptr);
+    return true;
+  }
+
   default:
+    std::cout << get_current_token().value << std::endl;
     return false;
   }
 }

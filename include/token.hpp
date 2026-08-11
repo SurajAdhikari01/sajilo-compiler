@@ -66,6 +66,7 @@ enum class TokenName {
   SURU,
   DEU,
   NISKI,
+  MANAU,
 
   // Types
   INT,
@@ -89,7 +90,8 @@ enum class TokenName {
   // Special
   ARROW,
   QUESTION,
-  UNKNOWN
+  UNKNOWN,
+  NONE,
 };
 struct Token {
   Token() {}
