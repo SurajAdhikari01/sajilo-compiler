@@ -1,0 +1,12 @@
+suru() -> deu(int)  {
+    name = sun "What is your name?"
+
+    jaba name == "Suraj" {
+    bol "Welcome Suraj!"
+
+    } natra {
+    bol "Hello " + name + ""
+    }
+
+  laijau value;
+  }

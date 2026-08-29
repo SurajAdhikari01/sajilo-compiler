@@ -1,0 +1,18 @@
+manau str : string = "Hello suraj";
+bol str;
+
+bol str;
+niski(40);
+
+
+parser :
+current_token ->aile ko current token dini
+peek_token -> offset -> check valid -> return token
+check -> token name -> if current match va vane true 
+check any of -> multiple token -> if any match true else false--> also send which token match through pointer ko Value
+match - > token name -> if match consume ret true natra false
+match any of ->
+expect -> token name , error msg if match na vaye print error natra consume
+expect any of ->
+
+

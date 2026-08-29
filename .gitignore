@@ -1,9 +1,6 @@
 /.cache/
-/build/
-helloworld
-hi
-compile_commands.json
+compiler/build/
+compiler/.cache/
+compiler/compile_commands.json
 
-out.asm
-hi
 

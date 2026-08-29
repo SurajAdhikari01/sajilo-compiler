@@ -92,6 +92,8 @@ enum class TokenName {
   QUESTION,
   UNKNOWN,
   NONE,
+
+  WRITE,
 };
 struct Token {
   Token() {}
