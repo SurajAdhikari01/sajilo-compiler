@@ -4,9 +4,7 @@
 #include <cstddef>
 #include <memory>
 std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
-  if (!parser.expect(TokenName::WRITE, "")) {
-    return nullptr;
-  }
+  parser.advance();
   if (!parser.expect(TokenName::LEFT_PAREN, "")) {
     return nullptr;
   }

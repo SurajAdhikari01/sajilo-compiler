@@ -84,12 +84,15 @@ public:
   void set_tokens(std::vector<Token> &tokens) {
     this->tokens = std::move(tokens);
   }
-  bool scan_token(TokenName tokname);
+  std::unique_ptr<Statements> parse_statement();
   void parse();
-  void add_statement(std::unique_ptr<Statements> &statement) {
+  bool add_statement(std::unique_ptr<Statements> statement) {
+
     if (statement) {
       statements.push_back(std::move(statement));
+      return true;
     }
+    return false;
   }
   size_t get_current_position() { return index; }
   Token get_token(size_t i) { return is_valid(i) ? tokens[i] : EOT; }

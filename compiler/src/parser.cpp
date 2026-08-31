@@ -2,17 +2,20 @@
 #include "statements/Bol.hpp"
 #include "statements/Manau.hpp"
 #include "statements/Niski.hpp"
+#include "statements/Write.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
+#include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <memory>
 #include <sstream>
 
 void Parser::parse() {
 
   for (; index < tokens.size(); ++index) {
 
-    if (!scan_token(tokens[index].token)) {
+    if (!add_statement(parse_statement())) {
       std::cerr << "Syntax error\n" << index;
       return;
     }
@@ -37,26 +40,24 @@ void Parser::parse() {
   file.close();
 }
 
-bool Parser::scan_token(TokenName tokname) {
+std::unique_ptr<Statements> Parser::parse_statement() {
+  auto tokname = current_token().token;
+
   switch (tokname) {
   case TokenName::NISKI: {
-    auto ptr = Niski::parse_niski(*this);
-    add_statement(ptr);
-    return true;
+    return Niski::parse_niski(*this);
   }
   case TokenName::BOL: {
-    auto ptr = Bol::parse_bol(*this);
-    add_statement(ptr);
-    return true;
+    return Bol::parse_bol(*this);
   }
   case TokenName::MANAU: {
-    auto ptr = Manau::parse_manau(*this);
-    add_statement(ptr);
-    return true;
+    return Manau::parse_manau(*this);
+  }
+  case TokenName::WRITE: {
+    return Write::parse_write(*this);
   }
 
   default:
-    std::cout << get_current_token().value << std::endl;
-    return false;
+    return nullptr;
   }
 }
