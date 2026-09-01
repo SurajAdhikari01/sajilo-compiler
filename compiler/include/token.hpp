@@ -69,11 +69,7 @@ enum class TokenName {
   MANAU,
 
   // Types
-  INT,
-  FLOAT,
-  CHAR,
-  STRING,
-  BOOL,
+  KEYWORD,
 
   // Values
   TRUE,
@@ -94,10 +90,13 @@ enum class TokenName {
   NONE,
 
   WRITE,
+  READ,
+  FUNC,
 };
 struct Token {
   Token() {}
-  Token(TokenName token, std::string_view value) : token{token}, value{value} {}
+  constexpr Token(TokenName token, std::string_view value)
+      : token{token}, value{value} {}
   constexpr Token(TokenName token) : token{token} {}
 
   TokenName token;

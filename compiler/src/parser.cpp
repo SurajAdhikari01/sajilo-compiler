@@ -1,7 +1,10 @@
 #include "parser.hpp"
-#include "statements/Bol.hpp"
+
+#include "statements/Function.hpp"
 #include "statements/Manau.hpp"
 #include "statements/Niski.hpp"
+#include "statements/Read.hpp"
+#include "statements/Scope.hpp"
 #include "statements/Write.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
@@ -47,14 +50,21 @@ std::unique_ptr<Statements> Parser::parse_statement() {
   case TokenName::NISKI: {
     return Niski::parse_niski(*this);
   }
-  case TokenName::BOL: {
-    return Bol::parse_bol(*this);
-  }
+
   case TokenName::MANAU: {
     return Manau::parse_manau(*this);
   }
   case TokenName::WRITE: {
     return Write::parse_write(*this);
+  }
+  case TokenName::READ: {
+    return Read::parse_read(*this);
+  }
+  case TokenName::FUNC: {
+    return Function::parse_function(*this);
+  }
+  case TokenName::LEFT_BRACE: {
+    return Scope::parse_scope(*this);
   }
 
   default:
