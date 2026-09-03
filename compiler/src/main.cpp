@@ -23,6 +23,8 @@ int main(int argc, char *argv[]) {
   lexer.tokenize();
 
   Parser parser;
+
+  parser.set_lexer(lexer);
   parser.set_tokens(lexer.get_tokens());
 
   parser.parse();

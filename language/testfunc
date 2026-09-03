@@ -1,0 +1,5 @@
+func ( int var) -> deu(int)  {
+write(var,size)
+read(var,sizze);
+ } 
+

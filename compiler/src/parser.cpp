@@ -19,7 +19,7 @@ void Parser::parse() {
   for (; index < tokens.size(); ++index) {
 
     if (!add_statement(parse_statement())) {
-      std::cerr << "Syntax error\n" << index;
+      std::cerr << "Syntax error\n" << current_token().value;
       return;
     }
   }
@@ -71,3 +71,7 @@ std::unique_ptr<Statements> Parser::parse_statement() {
     return nullptr;
   }
 }
+
+void Parser::set_lexer(Lexer &lexer) { this->lexer = &lexer; }
+
+const Lexer &Parser::get_lexer() const { return *lexer; }

@@ -1,10 +1,10 @@
 #pragma once
+#include "lexer.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
 #include <initializer_list>
-#include <iterator>
 #include <memory>
 #include <string_view>
 #include <utility>
@@ -56,7 +56,7 @@ public:
       advance();
       return true;
     }
-    print_error(error_msg);
+    print_error(*this, error_msg);
     return false;
   }
   bool expect_any_of(std::initializer_list<TokenName> tokname,
@@ -72,11 +72,11 @@ public:
         return true;
       }
     }
-    print_error(error_msg);
+    print_error(*this, error_msg);
     return false;
   }
 
-  const Token &current_token() { return tokens[index]; }
+  const Token &current_token() const { return tokens[index]; }
   void advance() { ++index; };
 
   bool is_valid() { return index < tokens.size(); }
@@ -96,11 +96,13 @@ public:
   }
   size_t get_current_position() { return index; }
   Token get_token(size_t i) { return is_valid(i) ? tokens[i] : EOT; }
+  void set_lexer(Lexer &lexer);
+  const Lexer &get_lexer() const;
 
-private:
 private:
   std::vector<Token> tokens;
   size_t index;
   std::vector<std::unique_ptr<Statements>> statements;
   Token EOT = {TokenName::NONE};
+  Lexer *lexer = nullptr;
 };

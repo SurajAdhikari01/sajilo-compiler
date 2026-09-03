@@ -21,11 +21,10 @@ static bool isKeyword(const std::string_view value, Token &token) {
   return false;
 }
 
-void Lexer::set_sourceCode(std::string &data) {
-  this->source_code = std::move(data);
-}
+void Lexer::set_sourceCode(std::string &data) { this->source_code = data; }
 
 void Lexer::tokenize() {
+  line_start_index.push_back(0);
   for (; index < source_code.size(); index++) {
     const char c = source_code[index];
     if (!scan_character(c)) {
@@ -36,6 +35,9 @@ void Lexer::tokenize() {
 
 bool Lexer::scan_character(const char c) {
   switch (c) {
+  case '\n':
+    process_new_line();
+    return true;
 
   case '(':
     add_token({TokenName::LEFT_PAREN});
@@ -105,6 +107,8 @@ bool Lexer::scan_character(const char c) {
       consume();
     }
     consume();
+    process_new_line();
+
     return true;
 
   case '"':
@@ -125,7 +129,7 @@ void Lexer::process_keyword(char c) {
   auto isChar = [](char c) -> bool {
     return ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '_' == c);
   };
-  char *first_ptr = get_current_ptr();
+  const char *first_ptr = get_current_ptr();
   if (isChar(c)) {
     while (isChar(peek()) || isNum(peek())) {
       consume();
@@ -156,7 +160,7 @@ void Lexer::process_string_literal() {
   }
 
   consume();
-  char *first_ptr = get_current_ptr();
+  const char *first_ptr = get_current_ptr();
   while (peek() != '"' && peek() != '\0') {
     consume();
   }

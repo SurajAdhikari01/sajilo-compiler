@@ -98,7 +98,8 @@ struct Token {
   constexpr Token(TokenName token, std::string_view value)
       : token{token}, value{value} {}
   constexpr Token(TokenName token) : token{token} {}
-
   TokenName token;
   std::string_view value;
+  int line_number = 1;
+  int current_column = 0;
 };

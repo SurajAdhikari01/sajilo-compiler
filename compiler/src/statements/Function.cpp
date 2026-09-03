@@ -1,4 +1,5 @@
 #include "statements/Function.hpp"
+#include "Error.hpp"
 #include "parser.hpp"
 #include "statements/Scope.hpp"
 #include "statements/statements.hpp"
@@ -7,6 +8,7 @@
 #include <memory>
 #include <optional>
 #include <vector>
+
 std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
   std::vector<Parameters> parameters;
   if (parser.match(TokenName::RIGHT_PAREN)) {
@@ -14,17 +16,17 @@ std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
   }
 
   while (true) {
-    if (!parser.expect(TokenName::KEYWORD, "")) {
+    if (!parser.expect(TokenName::KEYWORD, error::ExpectedKeyword)) {
       return {};
     }
-    if (!parser.expect(TokenName::IDENTIFIER, "")) {
+    if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
       return {};
     }
     if (!parser.match(TokenName::COMMA)) {
       break;
     }
   }
-  if (!parser.expect(TokenName::RIGHT_PAREN, "")) {
+  if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
     return {};
   }
   return parameters;
@@ -32,26 +34,26 @@ std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
 
 std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
   parser.advance();
-  if (!parser.expect(TokenName::IDENTIFIER, "")) {
+  if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::LEFT_PAREN, "")) {
+  if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
   parse_parameter(parser);
-  if (!parser.expect(TokenName::ARROW, "")) {
+  if (!parser.expect(TokenName::ARROW, error::ExpectedArrow)) {
     return nullptr;
   }
   if (!parser.expect(TokenName::DEU, "")) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::LEFT_PAREN, "")) {
+  if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::KEYWORD, "")) {
+  if (!parser.expect(TokenName::KEYWORD, error::ExpectedKeyword)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::RIGHT_PAREN, "")) {
+  if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
     return nullptr;
   }
   TokenName temp_token;
