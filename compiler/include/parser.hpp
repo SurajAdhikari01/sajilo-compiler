@@ -101,7 +101,7 @@ public:
 
 private:
   std::vector<Token> tokens;
-  size_t index;
+  size_t index{};
   std::vector<std::unique_ptr<Statements>> statements;
   Token EOT = {TokenName::NONE};
   Lexer *lexer = nullptr;
