@@ -84,12 +84,19 @@ bool Lexer::scan_character(const char c) {
     return true;
 
   case '+':
-    add_token({TokenName::PLUS});
+    if ('+' == peek()) {
+      add_token({TokenName::INCREMENT});
+    } else {
+      add_token({TokenName::PLUS});
+    }
+
     return true;
   case '-':
     if ('>' == peek()) {
       consume();
       add_token({TokenName::ARROW});
+    } else if ('-' == peek()) {
+      add_token({TokenName::DECREMENT});
     } else {
       add_token({TokenName::MINUS});
     }
