@@ -3,7 +3,7 @@
 class UnaryExpression : public Expression {
 public:
   UnaryExpression();
-  std::unique_ptr<Expression> parse_expression(Parser &parser);
+  std::unique_ptr<Expression> parse_prefix(Parser &parser);
 
 private:
   enum class UN_OPERATORS {
