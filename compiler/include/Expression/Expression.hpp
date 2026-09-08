@@ -1,10 +1,11 @@
 #pragma once
 #include "parser.hpp"
+#include <cstddef>
 #include <memory>
 class Expression {
 public:
   Expression() {}
-  std::unique_ptr<Expression> parse_expression(Parser &parser);
+  static std::unique_ptr<Expression> parse_expression(Parser &parser);
 
 private:
 };

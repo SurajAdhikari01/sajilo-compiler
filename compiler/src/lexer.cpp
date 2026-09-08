@@ -124,6 +124,9 @@ bool Lexer::scan_character(const char c) {
   case '=':
     add_token({TokenName::ASSIGN});
     return true;
+  case '&':
+    add_token({TokenName::AND});
+    return true;
 
   default:
     return false;

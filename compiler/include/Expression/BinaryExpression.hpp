@@ -4,7 +4,6 @@
 #include <memory>
 class BinaryExpression : public Expression {
 public:
-  BinaryExpression();
   std::unique_ptr<Expression> parse_expression(Parser &parser);
 
 private:

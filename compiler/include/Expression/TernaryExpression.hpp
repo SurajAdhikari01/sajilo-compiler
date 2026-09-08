@@ -4,7 +4,6 @@
 #include <memory>
 class TernaryExpression : public Expression {
 public:
-  TernaryExpression();
   std::unique_ptr<Expression> parse_expression(Parser &parser);
 
 private:

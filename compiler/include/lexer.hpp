@@ -2,6 +2,7 @@
 
 #include "token.hpp"
 #include <cstddef>
+#include <iostream>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -42,7 +43,6 @@ private:
   void add_token(Token &token) {
     token.line_number = line_number;
     token.current_column = current_column;
-
     tokens.push_back(token);
   }
   const char *get_current_ptr() const { return source_code.data() + index; };

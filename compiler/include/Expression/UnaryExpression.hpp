@@ -1,11 +1,11 @@
 #pragma once
 #import "Expression/Expression.hpp"
+#include <memory>
 class UnaryExpression : public Expression {
 public:
-  UnaryExpression();
-  std::unique_ptr<Expression> parse_prefix(Parser &parser);
-
-private:
+  static std::unique_ptr<Expression> parse_prefix(Parser &parser);
+  static std::unique_ptr<Expression>
+  parse_postfix(Parser &parser, std::unique_ptr<Expression> operand);
   enum class UN_OPERATORS {
     POST_INCR,
     PRE_INCR,
@@ -17,7 +17,10 @@ private:
     BITWISE_NOT,
     POSITIVE,
     NEGATIVE,
-
+    NONE,
   };
-  UN_OPERATORS un_operator{};
+
+private:
+  UN_OPERATORS un_operator = UN_OPERATORS::NONE;
+  std::unique_ptr<Expression> un_operand;
 };

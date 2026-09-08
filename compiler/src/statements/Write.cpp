@@ -1,5 +1,6 @@
 #include "statements/Write.hpp"
 #include "Error.hpp"
+#include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "token.hpp"
 #include <cstddef>
@@ -9,13 +10,13 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
+  if (!Expression::parse_expression(parser)) {
     return nullptr;
   }
   if (!parser.expect(TokenName::COMMA, error::ExpectedComma)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
+  if (!Expression::parse_expression(parser)) {
     return nullptr;
   }
   if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {

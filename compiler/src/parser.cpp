@@ -1,5 +1,6 @@
 #include "parser.hpp"
 
+#include "statements/ExpressionStatement.hpp"
 #include "statements/Function.hpp"
 #include "statements/Manau.hpp"
 #include "statements/Niski.hpp"
@@ -68,7 +69,7 @@ std::unique_ptr<Statements> Parser::parse_statement() {
   }
 
   default:
-    return nullptr;
+    return ExpressionStatement::parse_expression_statement(*this);
   }
 }
 
