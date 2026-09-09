@@ -1,7 +1,6 @@
 #pragma once
 #include <string_view>
-enum class TokenName {
-
+enum class TokenType {
   // Delimiters
   LEFT_PAREN,
   RIGHT_PAREN,
@@ -14,11 +13,12 @@ enum class TokenName {
   DOT,
   COLON,
   SEMICOLON,
+  QUESTION,
 
   // Arithmetic
   PLUS,
   MINUS,
-  STAR,
+  ASTERISK,
   SLASH,
   MODULO,
 
@@ -29,7 +29,7 @@ enum class TokenName {
   ASSIGN,
   PLUS_ASSIGN,
   MINUS_ASSIGN,
-  STAR_ASSIGN,
+  ASTERISK_ASSIGN,
   SLASH_ASSIGN,
   MODULO_ASSIGN,
 
@@ -54,7 +54,10 @@ enum class TokenName {
   LEFT_SHIFT,
   RIGHT_SHIFT,
 
-  // Keywords
+  // Other operators
+  ARROW,
+
+  // Language keywords
   BOL,
   SUN,
   GAR,
@@ -68,15 +71,19 @@ enum class TokenName {
   NISKI,
   MANAU,
 
+  WRITE,
+  READ,
+  FUNC,
+
   // Types
   KEYWORD,
 
-  // Values
+  // Literal values
   TRUE,
   FALSE,
   NULL_VALUE,
 
-  // Identifiers & literals
+  // Identifiers / literals
   IDENTIFIER,
   INT_LITERAL,
   FLOAT_LITERAL,
@@ -84,21 +91,16 @@ enum class TokenName {
   STRING_LITERAL,
 
   // Special
-  ARROW,
-  QUESTION,
   UNKNOWN,
   NONE,
-
-  WRITE,
-  READ,
-  FUNC,
+  END_OF_FILE
 };
 struct Token {
   Token() {}
-  constexpr Token(TokenName token, std::string_view value)
+  constexpr Token(TokenType token, std::string_view value)
       : token{token}, value{value} {}
-  constexpr Token(TokenName token) : token{token} {}
-  TokenName token;
+  constexpr Token(TokenType token) : token{token} {}
+  TokenType token;
   std::string_view value;
   int line_number = 1;
   int current_column = 0;

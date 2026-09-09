@@ -7,10 +7,10 @@
 #include <string>
 std::unique_ptr<Statements> Niski::parse_niski(Parser &parser) {
   // switch (parser.peek_token_name()) {
-  // case TokenName::LEFT_PAREN: {
+  // case TokenType::LEFT_PAREN: {
   //   return parse_niski_with_braces(parser);
   // }
-  // case TokenName::INT_LITERAL: {
+  // case TokenType::INT_LITERAL: {
   //   return parse_niski_without_braces(parser);
   // }
   // default:
@@ -21,7 +21,7 @@ std::unique_ptr<Statements> Niski::parse_niski(Parser &parser) {
 
 std::unique_ptr<Statements> Niski::parse_niski_with_braces(Parser &parser) {
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::INT_LITERAL)) {
+  // if (!parser.expect_token(TokenType::INT_LITERAL)) {
   //   return nullptr;
   // }
   // int dummy_niski_code = 1;
@@ -35,11 +35,11 @@ std::unique_ptr<Statements> Niski::parse_niski_with_braces(Parser &parser) {
   // }
   // parser.consume_token();
   //
-  // if (!parser.expect_token(TokenName::RIGHT_PAREN)) {
+  // if (!parser.expect_token(TokenType::RIGHT_PAREN)) {
   //   return nullptr;
   // }
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::SEMICOLON)) {
+  // if (!parser.expect_token(TokenType::SEMICOLON)) {
   //   return nullptr;
   // }
   // parser.consume_token();
@@ -49,7 +49,7 @@ std::unique_ptr<Statements> Niski::parse_niski_with_braces(Parser &parser) {
 }
 std::unique_ptr<Statements> Niski::parse_niski_without_braces(Parser &parser) {
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::INT_LITERAL)) {
+  // if (!parser.expect_token(TokenType::INT_LITERAL)) {
   //   return nullptr;
   // }
   // int dummy_niski_code = 1;
@@ -64,7 +64,7 @@ std::unique_ptr<Statements> Niski::parse_niski_without_braces(Parser &parser) {
   //
   // parser.consume_token();
   //
-  // if (!parser.expect_token(TokenName::SEMICOLON)) {
+  // if (!parser.expect_token(TokenType::SEMICOLON)) {
   //   return nullptr;
   // }
   // parser.consume_token();

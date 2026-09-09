@@ -48,23 +48,23 @@ std::unique_ptr<Statements> Parser::parse_statement() {
   auto tokname = current_token().token;
 
   switch (tokname) {
-  case TokenName::NISKI: {
+  case TokenType::NISKI: {
     return Niski::parse_niski(*this);
   }
 
-  case TokenName::MANAU: {
+  case TokenType::MANAU: {
     return Manau::parse_manau(*this);
   }
-  case TokenName::WRITE: {
+  case TokenType::WRITE: {
     return Write::parse_write(*this);
   }
-  case TokenName::READ: {
+  case TokenType::READ: {
     return Read::parse_read(*this);
   }
-  case TokenName::FUNC: {
+  case TokenType::FUNC: {
     return Function::parse_function(*this);
   }
-  case TokenName::LEFT_BRACE: {
+  case TokenType::LEFT_BRACE: {
     return Scope::parse_scope(*this);
   }
 

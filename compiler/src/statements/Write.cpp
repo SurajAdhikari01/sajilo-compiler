@@ -7,22 +7,22 @@
 #include <memory>
 std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   parser.advance();
-  if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
+  if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
   if (!Expression::parse_expression(parser)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::COMMA, error::ExpectedComma)) {
+  if (!parser.expect(TokenType::COMMA, error::ExpectedComma)) {
     return nullptr;
   }
   if (!Expression::parse_expression(parser)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
+  if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::SEMICOLON, error::ExpectedSemicolon)) {
+  if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
     return nullptr;
   }
   return std::make_unique<Write>();

@@ -7,17 +7,17 @@
 #include <string>
 
 std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
-  // if (!parser.expect_token(TokenName::IDENTIFIER)) {
+  // if (!parser.expect_token(TokenType::IDENTIFIER)) {
   //   return nullptr;
   // }
   // parser.consume_token();
   // auto pos = parser.get_current_position();
   //
-  // if (!parser.expect_token(TokenName::COLON)) {
+  // if (!parser.expect_token(TokenType::COLON)) {
   //   return nullptr;
   // }
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::STRING)) {
+  // if (!parser.expect_token(TokenType::STRING)) {
   //   return nullptr;
   // }
   //
@@ -28,18 +28,18 @@ void Manau::generate(CodeGenContext &) {}
 
 std::unique_ptr<Statements> Manau::parse_string(Parser &parser, size_t pos) {
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::ASSIGN)) {
+  // if (!parser.expect_token(TokenType::ASSIGN)) {
   //   return nullptr;
   // }
   // parser.consume_token();
-  // if (!parser.expect_token(TokenName::STRING_LITERAL)) {
+  // if (!parser.expect_token(TokenType::STRING_LITERAL)) {
   //   return nullptr;
   // }
   //
   // parser.consume_token();
   // std::string string_literal =
   //     string_view_to_string(parser.get_current_token().value);
-  // if (!parser.expect_token(TokenName::SEMICOLON)) {
+  // if (!parser.expect_token(TokenType::SEMICOLON)) {
   //   return nullptr;
   // }
   // parser.consume_token();

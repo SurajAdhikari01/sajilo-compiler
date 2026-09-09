@@ -7,20 +7,20 @@
 #include <memory>
 
 std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
-  TokenName temp_token;
-  if (!parser.expect_any_of({TokenName::LEFT_PAREN, TokenName::IDENTIFIER}, "",
+  TokenType temp_token;
+  if (!parser.expect_any_of({TokenType::LEFT_PAREN, TokenType::IDENTIFIER}, "",
                             &temp_token)) {
     return nullptr;
   }
-  if (temp_token == TokenName::LEFT_PAREN) {
-    if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
+  if (temp_token == TokenType::LEFT_PAREN) {
+    if (!parser.expect(TokenType::IDENTIFIER, error::ExpectedIdentifier)) {
       return nullptr;
     }
-    if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
+    if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
       return nullptr;
     }
   }
-  if (!parser.expect(TokenName::SEMICOLON, error::ExpectedSemicolon)) {
+  if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
     return nullptr;
   }
 

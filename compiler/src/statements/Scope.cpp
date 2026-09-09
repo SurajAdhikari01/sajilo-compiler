@@ -6,7 +6,7 @@
 #include <memory>
 std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
   parser.advance();
-  while (!parser.match(TokenName::RIGHT_BRACE)) {
+  while (!parser.match(TokenType::RIGHT_BRACE)) {
     if (!parser.parse_statement()) {
       return nullptr;
     }

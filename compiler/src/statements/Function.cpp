@@ -11,22 +11,22 @@
 
 std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
   std::vector<Parameters> parameters;
-  if (parser.match(TokenName::RIGHT_PAREN)) {
+  if (parser.match(TokenType::RIGHT_PAREN)) {
     return parameters;
   }
 
   while (true) {
-    if (!parser.expect(TokenName::KEYWORD, error::ExpectedKeyword)) {
+    if (!parser.expect(TokenType::KEYWORD, error::ExpectedKeyword)) {
       return {};
     }
-    if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
+    if (!parser.expect(TokenType::IDENTIFIER, error::ExpectedIdentifier)) {
       return {};
     }
-    if (!parser.match(TokenName::COMMA)) {
+    if (!parser.match(TokenType::COMMA)) {
       break;
     }
   }
-  if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
+  if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
     return {};
   }
   return parameters;
@@ -34,34 +34,34 @@ std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
 
 std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
   parser.advance();
-  if (!parser.expect(TokenName::IDENTIFIER, error::ExpectedIdentifier)) {
+  if (!parser.expect(TokenType::IDENTIFIER, error::ExpectedIdentifier)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
+  if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
   parse_parameter(parser);
-  if (!parser.expect(TokenName::ARROW, error::ExpectedArrow)) {
+  if (!parser.expect(TokenType::ARROW, error::ExpectedArrow)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::DEU, "")) {
+  if (!parser.expect(TokenType::DEU, "")) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::LEFT_PAREN, error::ExpectedLeftParen)) {
+  if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::KEYWORD, error::ExpectedKeyword)) {
+  if (!parser.expect(TokenType::KEYWORD, error::ExpectedKeyword)) {
     return nullptr;
   }
-  if (!parser.expect(TokenName::RIGHT_PAREN, error::ExpectedRightParen)) {
+  if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
     return nullptr;
   }
-  TokenName temp_token;
-  if (!parser.check_any_of({TokenName::LEFT_BRACE, TokenName::SEMICOLON},
+  TokenType temp_token;
+  if (!parser.check_any_of({TokenType::LEFT_BRACE, TokenType::SEMICOLON},
                            &temp_token)) {
     return nullptr;
   }
-  if (temp_token == TokenName::LEFT_BRACE) {
+  if (temp_token == TokenType::LEFT_BRACE) {
     Scope::parse_scope(parser);
   }
 

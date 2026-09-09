@@ -5,34 +5,34 @@
 #include <initializer_list>
 #include <memory>
 
-UnaryExpression::UN_OPERATORS get_unary_operator_prefix(TokenName tokenName) {
-  switch (tokenName) {
-  case TokenName::AND:
+UnaryExpression::UN_OPERATORS get_unary_operator_prefix(TokenType TokenType) {
+  switch (TokenType) {
+  case TokenType::AND:
     return UnaryExpression::UN_OPERATORS::REFERENCE;
-  case TokenName::INCREMENT:
+  case TokenType::INCREMENT:
     return UnaryExpression::UN_OPERATORS::PRE_INCR;
-  case TokenName::DECREMENT:
+  case TokenType::DECREMENT:
     return UnaryExpression::UN_OPERATORS::PRE_DECR;
-  case TokenName::PLUS:
+  case TokenType::PLUS:
     return UnaryExpression::UN_OPERATORS::POSITIVE;
-  case TokenName::MINUS:
+  case TokenType::MINUS:
     return UnaryExpression::UN_OPERATORS::NEGATIVE;
-  case TokenName::STAR:
+  case TokenType::STAR:
     return UnaryExpression::UN_OPERATORS::DEREFERENCE;
-  case TokenName::NOT:
+  case TokenType::NOT:
     return UnaryExpression::UN_OPERATORS::LOGICAL_NOT;
-  case TokenName::BIT_NOT:
+  case TokenType::BIT_NOT:
     return UnaryExpression::UN_OPERATORS::BITWISE_NOT;
   default:
     return UnaryExpression::UN_OPERATORS::NONE;
     ;
   }
 }
-UnaryExpression::UN_OPERATORS get_unary_operator_postfix(TokenName tokenName) {
-  switch (tokenName) {
-  case TokenName::INCREMENT:
+UnaryExpression::UN_OPERATORS get_unary_operator_postfix(TokenType TokenType) {
+  switch (TokenType) {
+  case TokenType::INCREMENT:
     return UnaryExpression::UN_OPERATORS::POST_INCR;
-  case TokenName::DECREMENT:
+  case TokenType::DECREMENT:
     return UnaryExpression::UN_OPERATORS::POST_DECR;
   default:
     return UnaryExpression::UN_OPERATORS::NONE;
@@ -40,12 +40,12 @@ UnaryExpression::UN_OPERATORS get_unary_operator_postfix(TokenName tokenName) {
 }
 
 std::unique_ptr<Expression> UnaryExpression::parse_prefix(Parser &parser) {
-  static const std::initializer_list<TokenName> unary_operator = {
-      TokenName::INCREMENT, TokenName::DECREMENT, TokenName::BIT_NOT,
-      TokenName::NOT,       TokenName::PLUS,      TokenName::MINUS,
-      TokenName::STAR,      TokenName::AND,
+  static const std::initializer_list<TokenType> unary_operator = {
+      TokenType::INCREMENT, TokenType::DECREMENT, TokenType::BIT_NOT,
+      TokenType::NOT,       TokenType::PLUS,      TokenType::MINUS,
+      TokenType::STAR,      TokenType::AND,
   };
-  TokenName tempToken;
+  TokenType tempToken;
   if (!parser.match_any_of(unary_operator, &tempToken)) {
     return nullptr;
   }
@@ -59,9 +59,9 @@ std::unique_ptr<Expression>
 UnaryExpression::parse_postfix(Parser &parser,
                                std::unique_ptr<Expression> operand) {
 
-  static const std::initializer_list<TokenName> unary_operator = {
-      TokenName::INCREMENT, TokenName::DECREMENT};
-  TokenName tempToken;
+  static const std::initializer_list<TokenType> unary_operator = {
+      TokenType::INCREMENT, TokenType::DECREMENT};
+  TokenType tempToken;
   if (!parser.match_any_of(unary_operator, &tempToken)) {
     return nullptr;
   }

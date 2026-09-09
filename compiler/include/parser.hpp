@@ -14,12 +14,12 @@ public:
   const Token &peek_token(int offset = 1) {
     return is_valid(offset) ? tokens[index + offset] : EOT;
   }
-  TokenName peek_token_name() { return peek_token().token; }
+  TokenType peek_token_name() { return peek_token().token; }
 
-  bool check(TokenName tokname) { return (current_token().token == tokname); }
-  bool check_any_of(std::initializer_list<TokenName> tokens,
-                    TokenName *matched_token = nullptr) {
-    TokenName current = current_token().token;
+  bool check(TokenType tokname) { return (current_token().token == tokname); }
+  bool check_any_of(std::initializer_list<TokenType> tokens,
+                    TokenType *matched_token = nullptr) {
+    TokenType current = current_token().token;
 
     for (auto token : tokens) {
       if (token == current) {
@@ -30,17 +30,17 @@ public:
     }
     return false;
   }
-  bool match(TokenName token) {
+  bool match(TokenType token) {
     if (token == current_token().token) {
       advance();
       return true;
     }
     return false;
   }
-  bool match_any_of(std::initializer_list<TokenName> tokens,
-                    TokenName *matched_token = nullptr) {
+  bool match_any_of(std::initializer_list<TokenType> tokens,
+                    TokenType *matched_token = nullptr) {
 
-    TokenName current = current_token().token;
+    TokenType current = current_token().token;
     for (auto token : tokens) {
       if (token == current) {
         if (matched_token)
@@ -51,19 +51,19 @@ public:
     }
     return false;
   }
-  bool expect(TokenName tokenName, std::string_view error_msg) {
-    if (tokenName == current_token().token) {
+  bool expect(TokenType TokenType, std::string_view error_msg) {
+    if (TokenType == current_token().token) {
       advance();
       return true;
     }
     print_error(*this, error_msg);
     return false;
   }
-  bool expect_any_of(std::initializer_list<TokenName> tokname,
+  bool expect_any_of(std::initializer_list<TokenType> tokname,
                      std::string_view error_msg,
-                     TokenName *matched_token = nullptr) {
+                     TokenType *matched_token = nullptr) {
 
-    TokenName current = current_token().token;
+    TokenType current = current_token().token;
     for (auto token : tokname) {
       if (token == current) {
         if (matched_token)
@@ -103,6 +103,6 @@ private:
   std::vector<Token> tokens;
   size_t index{};
   std::vector<std::unique_ptr<Statements>> statements;
-  Token EOT = {TokenName::NONE};
+  Token EOT = {TokenType::NONE};
   Lexer *lexer = nullptr;
 };
