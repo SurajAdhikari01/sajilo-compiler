@@ -5,7 +5,7 @@
 
 std::unique_ptr<Expression> PrimaryExpression::parse_primary(Parser &parser) {
   TokenType tempToken;
-  if (!parser.match_any_of({TokenType::INT_LITERAL, TokenType::STRING_LITERAL,
+  if (!parser.check_any_of({TokenType::INT_LITERAL, TokenType::STRING_LITERAL,
                             TokenType::IDENTIFIER},
                            &tempToken)) {
     return nullptr;
@@ -21,5 +21,6 @@ std::unique_ptr<Expression> PrimaryExpression::parse_primary(Parser &parser) {
     primary_expr->primary_type = PRIMARY_TYPE::IDENTIFIER;
     primary_expr->value = parser.current_token().value;
   }
+  parser.advance();
   return primary_expr;
 }

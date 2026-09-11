@@ -1,10 +1,11 @@
 #include "Expression/UnaryExpression.hpp"
 #include "Expression/Expression.hpp"
+#include "Expression/PrimaryExpression.hpp"
 #include "parser.hpp"
 #include "token.hpp"
+#include <cstddef>
 #include <initializer_list>
 #include <memory>
-
 UnaryExpression::UN_OPERATORS get_unary_operator_prefix(TokenType TokenType) {
   switch (TokenType) {
   case TokenType::AND:
@@ -17,7 +18,7 @@ UnaryExpression::UN_OPERATORS get_unary_operator_prefix(TokenType TokenType) {
     return UnaryExpression::UN_OPERATORS::POSITIVE;
   case TokenType::MINUS:
     return UnaryExpression::UN_OPERATORS::NEGATIVE;
-  case TokenType::STAR:
+  case TokenType::ASTERISK:
     return UnaryExpression::UN_OPERATORS::DEREFERENCE;
   case TokenType::NOT:
     return UnaryExpression::UN_OPERATORS::LOGICAL_NOT;
@@ -43,15 +44,20 @@ std::unique_ptr<Expression> UnaryExpression::parse_prefix(Parser &parser) {
   static const std::initializer_list<TokenType> unary_operator = {
       TokenType::INCREMENT, TokenType::DECREMENT, TokenType::BIT_NOT,
       TokenType::NOT,       TokenType::PLUS,      TokenType::MINUS,
-      TokenType::STAR,      TokenType::AND,
+      TokenType::ASTERISK,  TokenType::AND,
   };
   TokenType tempToken;
-  if (!parser.match_any_of(unary_operator, &tempToken)) {
-    return nullptr;
+  if (!parser.check_any_of(unary_operator, &tempToken)) {
+    return PrimaryExpression::parse_primary(parser);
   }
   auto unaryExpr = std::make_unique<UnaryExpression>();
   unaryExpr->un_operator = get_unary_operator_prefix(tempToken);
-  unaryExpr->un_operand = Expression::parse_expression(parser);
+  parser.advance();
+
+  unaryExpr->un_operand = Expression::pratt_expression(parser, 100.0f);
+  if (!unaryExpr->un_operand) {
+    return nullptr;
+  }
 
   return unaryExpr;
 }

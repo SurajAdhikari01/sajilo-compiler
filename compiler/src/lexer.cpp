@@ -2,26 +2,18 @@
 #include "token.hpp"
 #include <string_view>
 
-static bool isKeyword(const std::string_view value, Token &token)
-{
+static bool isKeyword(const std::string_view value, Token &token) {
   constexpr static std::pair<std::string_view, Token> keyword_map[] = {
-      {"suru", {TokenType::SURU}},
-      {"read", {TokenType::READ}},
-      {"write", {TokenType::WRITE}},
-      {"jaba", {TokenType::JABA}},
-      {"laijau", {TokenType::LAIJAU}},
-      {"natra", {TokenType::NATRA}},
-      {"deu", {TokenType::DEU}},
-      {"int", {TokenType::KEYWORD, "int"}},
-      {"niski", {TokenType::NISKI}},
-      {"func", {TokenType::FUNC}},
+      {"suru", {TokenType::SURU}},     {"read", {TokenType::READ}},
+      {"write", {TokenType::WRITE}},   {"jaba", {TokenType::JABA}},
+      {"laijau", {TokenType::LAIJAU}}, {"natra", {TokenType::NATRA}},
+      {"deu", {TokenType::DEU}},       {"int", {TokenType::KEYWORD, "int"}},
+      {"niski", {TokenType::NISKI}},   {"func", {TokenType::FUNC}},
       {"manau", {TokenType::MANAU}},
 
   };
-  for (const auto &[map_view, map_token] : keyword_map)
-  {
-    if (map_view == value)
-    {
+  for (const auto &[map_view, map_token] : keyword_map) {
+    if (map_view == value) {
       token = map_token;
       return true;
     }
@@ -31,23 +23,18 @@ static bool isKeyword(const std::string_view value, Token &token)
 
 void Lexer::set_sourceCode(std::string &data) { this->source_code = data; }
 
-void Lexer::tokenize()
-{
+void Lexer::tokenize() {
   line_start_index.push_back(0);
-  for (; index < source_code.size(); index++)
-  {
+  for (; index < source_code.size(); index++) {
     const char c = source_code[index];
-    if (!process_symbol(c))
-    {
+    if (!process_symbol(c)) {
       process_keyword(c);
     }
   }
 }
 
-bool Lexer::process_symbol(char c)
-{
-  switch (c)
-  {
+bool Lexer::process_symbol(char c) {
+  switch (c) {
   // ---------------------------------------------------------
   // Whitespace / newline
   // ---------------------------------------------------------
@@ -111,76 +98,55 @@ bool Lexer::process_symbol(char c)
   // Arithmetic / assignment
   // ---------------------------------------------------------
   case '+':
-    if (peek() == '+')
-    {
+    if (peek() == '+') {
       consume();
       add_token({TokenType::INCREMENT});
-    }
-    else if (peek() == '=')
-    {
+    } else if (peek() == '=') {
       consume();
       add_token({TokenType::PLUS_ASSIGN});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::PLUS});
     }
     return true;
 
   case '-':
-    if (peek() == '-')
-    {
+    if (peek() == '-') {
       consume();
       add_token({TokenType::DECREMENT});
-    }
-    else if (peek() == '=')
-    {
+    } else if (peek() == '=') {
       consume();
       add_token({TokenType::MINUS_ASSIGN});
-    }
-    else if (peek() == '>')
-    {
+    } else if (peek() == '>') {
       consume();
       add_token({TokenType::ARROW});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::MINUS});
     }
     return true;
 
   case '*':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::ASTERISK_ASSIGN});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::ASTERISK});
     }
     return true;
 
   case '/':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::SLASH_ASSIGN});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::SLASH});
     }
     return true;
 
   case '%':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::MODULO_ASSIGN});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::MODULO});
     }
     return true;
@@ -189,13 +155,10 @@ bool Lexer::process_symbol(char c)
   // Assignment / equality
   // ---------------------------------------------------------
   case '=':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::EQUAL_EQUAL});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::ASSIGN});
     }
     return true;
@@ -204,13 +167,10 @@ bool Lexer::process_symbol(char c)
   // Logical NOT / inequality
   // ---------------------------------------------------------
   case '!':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::NOT_EQUAL});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::NOT});
     }
     return true;
@@ -219,35 +179,25 @@ bool Lexer::process_symbol(char c)
   // Comparison / shifts
   // ---------------------------------------------------------
   case '<':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::LESS_EQUAL});
-    }
-    else if (peek() == '<')
-    {
+    } else if (peek() == '<') {
       consume();
       add_token({TokenType::LEFT_SHIFT});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::LESS});
     }
     return true;
 
   case '>':
-    if (peek() == '=')
-    {
+    if (peek() == '=') {
       consume();
       add_token({TokenType::GREATER_EQUAL});
-    }
-    else if (peek() == '>')
-    {
+    } else if (peek() == '>') {
       consume();
       add_token({TokenType::RIGHT_SHIFT});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::GREATER});
     }
     return true;
@@ -256,25 +206,19 @@ bool Lexer::process_symbol(char c)
   // Logical / bitwise
   // ---------------------------------------------------------
   case '&':
-    if (peek() == '&')
-    {
+    if (peek() == '&') {
       consume();
       add_token({TokenType::AND});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::BIT_AND});
     }
     return true;
 
   case '|':
-    if (peek() == '|')
-    {
+    if (peek() == '|') {
       consume();
       add_token({TokenType::OR});
-    }
-    else
-    {
+    } else {
       add_token({TokenType::BIT_OR});
     }
     return true;
@@ -293,8 +237,7 @@ bool Lexer::process_symbol(char c)
   // # this is a comment
   // ---------------------------------------------------------
   case '#':
-    while (!is_at_end() && peek() != '\n')
-    {
+    while (isValid() && peek() != '\n') {
       consume();
     }
 
@@ -310,7 +253,7 @@ bool Lexer::process_symbol(char c)
     return true;
 
   case '\'':
-    process_char_literal();
+    // process_char_literal();
     return true;
 
   default:
@@ -318,38 +261,28 @@ bool Lexer::process_symbol(char c)
   }
 }
 
-void Lexer::process_keyword(char c)
-{
-  auto isNum = [](char c) -> bool
-  { return ('0' <= c && c <= '9'); };
+void Lexer::process_keyword(char c) {
+  auto isNum = [](char c) -> bool { return ('0' <= c && c <= '9'); };
 
-  auto isChar = [](char c) -> bool
-  {
+  auto isChar = [](char c) -> bool {
     return ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '_' == c);
   };
   const char *first_ptr = get_current_ptr();
-  if (isChar(c))
-  {
-    while (isChar(peek()) || isNum(peek()))
-    {
+  if (isChar(c)) {
+    while (isChar(peek()) || isNum(peek())) {
       consume();
     }
     buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
-    if (Token token; isKeyword(buffer, token))
-    {
+    if (Token token; isKeyword(buffer, token)) {
       add_token(token);
-    }
-    else
-    {
+    } else {
       add_token({TokenType::IDENTIFIER, buffer});
     }
   }
-  if (isNum(c))
-  {
+  if (isNum(c)) {
     first_ptr = get_current_ptr();
 
-    while (isNum(peek()))
-    {
+    while (isNum(peek())) {
       consume();
     }
     buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
@@ -357,10 +290,8 @@ void Lexer::process_keyword(char c)
   }
 };
 
-void Lexer::process_string_literal()
-{
-  if (peek() == '"')
-  {
+void Lexer::process_string_literal() {
+  if (peek() == '"') {
     add_token({TokenType::STRING_LITERAL});
     consume();
     return;
@@ -368,8 +299,7 @@ void Lexer::process_string_literal()
 
   consume();
   const char *first_ptr = get_current_ptr();
-  while (peek() != '"' && peek() != '\0')
-  {
+  while (peek() != '"' && peek() != '\0') {
     consume();
   }
   buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
