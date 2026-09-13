@@ -51,7 +51,8 @@ public:
     }
     return false;
   }
-  bool expect(TokenType TokenType, std::string_view error_msg) {
+
+  [[nodiscard]] bool expect(TokenType TokenType, std::string_view error_msg) {
     if (TokenType == current_token().token) {
       advance();
       return true;
@@ -59,9 +60,9 @@ public:
     print_error(*this, error_msg);
     return false;
   }
-  bool expect_any_of(std::initializer_list<TokenType> tokname,
-                     std::string_view error_msg,
-                     TokenType *matched_token = nullptr) {
+  [[nodiscard]] bool expect_any_of(std::initializer_list<TokenType> tokname,
+                                   std::string_view error_msg,
+                                   TokenType *matched_token = nullptr) {
 
     TokenType current = current_token().token;
     for (auto token : tokname) {

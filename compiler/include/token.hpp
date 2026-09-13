@@ -70,6 +70,7 @@ enum class TokenType {
   DEU,
   NISKI,
   MANAU,
+  JABASAMMA,
 
   WRITE,
   READ,
