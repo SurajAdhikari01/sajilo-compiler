@@ -4,18 +4,13 @@
 
 static bool isKeyword(const std::string_view value, Token &token) {
   constexpr static std::pair<std::string_view, Token> keyword_map[] = {
-      {"suru", {TokenType::SURU}},
-      {"read", {TokenType::READ}},
-      {"write", {TokenType::WRITE}},
-      {"jaba", {TokenType::JABA}},
-      {"laijau", {TokenType::LAIJAU}},
-      {"natra", {TokenType::NATRA}},
-      {"deu", {TokenType::DEU}},
-      {"int", {TokenType::KEYWORD, "int"}},
-      {"niski", {TokenType::NISKI}},
-      {"func", {TokenType::FUNC}},
-      {"manau", {TokenType::MANAU}},
-      {"jabasamma", {TokenType::JABASAMMA}}
+      {"suru", {TokenType::SURU}},     {"read", {TokenType::READ}},
+      {"write", {TokenType::WRITE}},   {"jaba", {TokenType::JABA}},
+      {"laijau", {TokenType::LAIJAU}}, {"natra", {TokenType::NATRA}},
+      {"deu", {TokenType::DEU}},       {"int", {TokenType::KEYWORD, "int"}},
+      {"niski", {TokenType::NISKI}},   {"func", {TokenType::FUNC}},
+      {"manau", {TokenType::MANAU}},   {"jabasamma", {TokenType::JABASAMMA}},
+      {"exit", {TokenType::EXIT}}
 
   };
   for (const auto &[map_view, map_token] : keyword_map) {

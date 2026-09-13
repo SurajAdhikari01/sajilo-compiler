@@ -6,7 +6,7 @@ class Expression;
 class Parser;
 class Exit : public Statements {
 public:
-  static std::unique_ptr<Statements> parse_return(Parser &parser);
+  static std::unique_ptr<Statements> parse_exit(Parser &parser);
   virtual void generate(CodeGenContext &) override;
 
 private:

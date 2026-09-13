@@ -5,11 +5,10 @@
 #include <memory>
 class While : public Statements {
 public:
-  While();
-  virtual ~While();
+  virtual ~While() {};
   static std::unique_ptr<Statements> parse_while(Parser &parser);
 
-  void generate(CodeGenContext &) override;
+  virtual void generate(CodeGenContext &) override {};
 
 private:
   std::unique_ptr<Expression> condition;

@@ -1,6 +1,14 @@
 func make( int var) -> deu(int)  {
 # write(!!!!!!!!!!var,size);
-!(!!!!!1+ 2 )- (3  *4);
+# !(!!!!!1+ 2 )- (3  *4);
+1+2-3;
+
+
+jaba(a+b){
+niski(a+b);
+exit(a+b);
+  }
+
 # read(var,sizze);
  } 
 

@@ -7,7 +7,8 @@
 #include <cstddef>
 #include <memory>
 
-std::unique_ptr<Statements> Exit::parse_return(Parser &parser) {
+std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
+  parser.advance();
   auto exit_stmt = std::make_unique<Exit>();
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;

@@ -7,12 +7,11 @@
 class If : public Statements {
 
 public:
-  If();
   virtual ~If() {};
 
   static std::unique_ptr<Statements> parse_if(Parser &parser);
 
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate(CodeGenContext &) override {};
 
 private:
   std::unique_ptr<Expression> condition;

@@ -4,6 +4,7 @@
 #include "statements/Scope.hpp"
 #include "token.hpp"
 #include <cstddef>
+#include <iostream>
 #include <memory>
 
 std::unique_ptr<Statements> If::parse_if(Parser &parser) {

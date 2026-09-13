@@ -75,6 +75,7 @@ enum class TokenType {
   WRITE,
   READ,
   FUNC,
+  EXIT,
 
   // Types
   KEYWORD,

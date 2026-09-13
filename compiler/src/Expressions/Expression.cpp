@@ -7,7 +7,9 @@
 #include "token.hpp"
 #include <cstddef>
 #include <initializer_list>
+#include <iostream>
 #include <memory>
+#include <ostream>
 #include <random>
 #include <tuple>
 #include <utility>

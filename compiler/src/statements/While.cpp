@@ -6,6 +6,7 @@
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
+#include <ostream>
 
 std::unique_ptr<Statements> While::parse_while(Parser &parser) {
   parser.advance();

@@ -16,7 +16,7 @@ public:
     if (!expr) {
       return nullptr;
     }
-    if (parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
+    if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
       return nullptr;
     }
     auto expr_statement = std::make_unique<ExpressionStatement>();
