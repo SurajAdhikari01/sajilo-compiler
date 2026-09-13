@@ -1,9 +1,9 @@
 #pragma once
 
-#include "parser.hpp"
 #include "statements/statements.hpp"
 #include <memory>
-#include <string_view>
+class Expression;
+class Parser;
 class Return : public Statements {
 public:
   Return() {}
@@ -11,5 +11,5 @@ public:
   virtual void generate(CodeGenContext &) override;
 
 private:
-  std::string_view return_value;
+  std::unique_ptr<Expression> return_value;
 };

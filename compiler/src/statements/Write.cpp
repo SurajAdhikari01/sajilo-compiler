@@ -6,17 +6,22 @@
 #include <cstddef>
 #include <memory>
 std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
+  auto write_stmt = std::make_unique<Write>();
   parser.advance();
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
-  if (!Expression::parse_expression(parser)) {
+  write_stmt->variable = Expression::parse_expression(parser);
+
+  if (!write_stmt->variable) {
     return nullptr;
   }
   if (!parser.expect(TokenType::COMMA, error::ExpectedComma)) {
     return nullptr;
   }
-  if (!Expression::parse_expression(parser)) {
+  write_stmt->length = Expression::parse_expression(parser);
+
+  if (!write_stmt->length) {
     return nullptr;
   }
   if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
@@ -25,7 +30,7 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
     return nullptr;
   }
-  return std::make_unique<Write>();
+  return write_stmt;
 }
 
 void Write::generate(CodeGenContext &) {}

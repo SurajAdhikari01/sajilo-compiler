@@ -9,7 +9,6 @@ enum class DATA_TYPES {
   FLOAT,
   BOOL,
   USER_DEFINED,
-
 };
 inline DATA_TYPES get_datatypes(const std::string_view keyword) {
   constexpr static std::pair<std::string, DATA_TYPES> m_datatype_map[] = {

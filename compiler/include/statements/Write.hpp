@@ -1,10 +1,10 @@
 #pragma once
 
-#include "parser.hpp"
 #include "statements/statements.hpp"
 #include <cstddef>
 #include <memory>
-#include <string_view>
+class Parser;
+class Expression;
 class Write : public Statements {
 public:
   static std::unique_ptr<Statements> parse_write(Parser &parser);
@@ -12,6 +12,6 @@ public:
   virtual void generate(CodeGenContext &) override;
 
 private:
-  std::string_view variable;
-  std::string_view length;
+  std::unique_ptr<Expression> variable;
+  std::unique_ptr<Expression> length;
 };

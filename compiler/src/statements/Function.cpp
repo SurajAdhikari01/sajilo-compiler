@@ -11,22 +11,31 @@
 #include <utility>
 #include <vector>
 
-std::optional<std::vector<Parameters>> parse_parameter(Parser &parser) {
+std::optional<std::vector<ParameterDecl>> parse_parameter(Parser &parser) {
 
-  std::vector<Parameters> parameters;
+  std::vector<ParameterDecl> parameters;
   if (parser.match(TokenType::RIGHT_PAREN)) {
     return parameters;
   }
-  Parameters param;
+
+  ParameterDecl param;
 
   while (true) {
-    if (!parser.expect(TokenType::KEYWORD, error::ExpectedKeyword)) {
+    if (!parser.check_any_of({TokenType::KEYWORD, TokenType::IDENTIFIER})) {
+      print_error(parser, "");
       return {};
     }
+    param.type.name = parser.current_token().value;
+    param.type.data_type = get_datatypes(param.type.name);
+    parser.advance();
 
-    if (!parser.expect(TokenType::IDENTIFIER, error::ExpectedIdentifier)) {
+    if (!parser.check(TokenType::IDENTIFIER)) {
       return {};
     }
+    param.name = parser.current_token().value;
+    parser.advance();
+
+    parameters.push_back(param);
     if (!parser.match(TokenType::COMMA)) {
       break;
     }
@@ -70,9 +79,8 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
     print_error(parser, error::ExpectedReturnType);
     return nullptr;
   }
-  func_stmt->return_type.variable_name = parser.current_token().value;
-  func_stmt->return_type.data_type =
-      get_datatypes(func_stmt->return_type.variable_name);
+  func_stmt->return_type.name = parser.current_token().value;
+  func_stmt->return_type.data_type = get_datatypes(func_stmt->return_type.name);
   parser.advance();
   if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
     return nullptr;

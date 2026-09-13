@@ -1,5 +1,6 @@
 #import "statements/Return.hpp"
 #include "Error.hpp"
+#include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
@@ -7,24 +8,22 @@
 #include <memory>
 
 std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
-  TokenType temp_token;
-  if (!parser.expect_any_of({TokenType::LEFT_PAREN, TokenType::IDENTIFIER}, "",
-                            &temp_token)) {
+  auto return_stmt = std::make_unique<Return>();
+  if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
-  if (temp_token == TokenType::LEFT_PAREN) {
-    if (!parser.expect(TokenType::IDENTIFIER, error::ExpectedIdentifier)) {
-      return nullptr;
-    }
-    if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
-      return nullptr;
-    }
+  return_stmt->return_value = Expression::parse_expression(parser);
+  if (!return_stmt->return_value) {
+    return nullptr;
+  }
+  if (!parser.expect(TokenType::RIGHT_PAREN, error::ExpectedRightParen)) {
+    return nullptr;
   }
   if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
     return nullptr;
   }
 
-  return std::make_unique<Return>();
+  return return_stmt;
 }
 
-void Return::generate(CodeGenContext &) {}
+void Return::generate(CodeGenContext &) {};

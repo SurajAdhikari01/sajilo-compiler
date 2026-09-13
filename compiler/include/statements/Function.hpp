@@ -5,11 +5,14 @@
 #include "utils.hpp"
 #include <memory>
 #include <string_view>
-#include <vector>
 
-struct Parameters {
+struct TypeRef {
   DATA_TYPES data_type = DATA_TYPES::VOID;
-  std::string_view variable_name;
+  std::string_view name;
+};
+struct ParameterDecl {
+  TypeRef type;
+  std::string_view name;
 };
 class Function : public Statements {
 public:
@@ -18,8 +21,8 @@ public:
 
 private:
   std::string_view func_name;
-  std::vector<Parameters> parameters;
-  Parameters return_type;
+  std::vector<ParameterDecl> parameters;
+  TypeRef return_type;
   std::unique_ptr<Statements> body;
   bool isDefined = false;
 };
