@@ -1,55 +1,50 @@
 #include "statements/Manau.hpp"
+#include "Error.hpp"
+#include "Expression/Expression.hpp"
 #include "symbolTable.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
+#include <iostream>
 #include <memory>
-#include <string>
+#include <ostream>
 
 std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
-  // if (!parser.expect_token(TokenType::IDENTIFIER)) {
-  //   return nullptr;
-  // }
-  // parser.consume_token();
-  // auto pos = parser.get_current_position();
-  //
-  // if (!parser.expect_token(TokenType::COLON)) {
-  //   return nullptr;
-  // }
-  // parser.consume_token();
-  // if (!parser.expect_token(TokenType::STRING)) {
-  //   return nullptr;
-  // }
-  //
-  // return parse_string(parser, pos);
-  return nullptr;
+  std::unique_ptr<Manau> manau_stmt = std::make_unique<Manau>();
+  parser.advance();
+
+  if (parser.match(TokenType::COLON)) {
+    if (!parser.expect(TokenType::CONST, "")) {
+      return nullptr;
+    }
+    manau_stmt->isConst = true;
+  }
+  if (!parser.check_any_of({TokenType::KEYWORD, TokenType::IDENTIFIER})) {
+    print_error(parser, "");
+    return nullptr;
+  }
+
+  manau_stmt->data_type.name = parser.current_token().value;
+
+  manau_stmt->data_type.data_type = get_datatypes(manau_stmt->data_type.name);
+  parser.advance();
+
+  if (!parser.check(TokenType::IDENTIFIER)) {
+    return nullptr;
+  }
+
+  manau_stmt->name = parser.current_token().value;
+  parser.advance();
+  if (parser.match(TokenType::ASSIGN)) {
+    manau_stmt->expr = Expression::parse_expression(parser);
+    if (!manau_stmt->expr) {
+      return nullptr;
+    }
+  }
+  if (!parser.expect(TokenType::SEMICOLON, error::ExpectedSemicolon)) {
+    return nullptr;
+  }
+
+  return manau_stmt;
 }
 void Manau::generate(CodeGenContext &) {}
-
-std::unique_ptr<Statements> Manau::parse_string(Parser &parser, size_t pos) {
-  // parser.consume_token();
-  // if (!parser.expect_token(TokenType::ASSIGN)) {
-  //   return nullptr;
-  // }
-  // parser.consume_token();
-  // if (!parser.expect_token(TokenType::STRING_LITERAL)) {
-  //   return nullptr;
-  // }
-  //
-  // parser.consume_token();
-  // std::string string_literal =
-  //     string_view_to_string(parser.get_current_token().value);
-  // if (!parser.expect_token(TokenType::SEMICOLON)) {
-  //   return nullptr;
-  // }
-  // parser.consume_token();
-  // std::string variable_name(parser.get_token(pos).value);
-  // decleration_data dec_data;
-  // dec_data.value = string_literal;
-  // dec_data.dataType = DataTypes::STRING;
-  // dec_data.isConst = false;
-  //
-  // get_table().insert(variable_name, dec_data);
-  // return std::make_unique<Manau>(variable_name);
-  return nullptr;
-}

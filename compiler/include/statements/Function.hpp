@@ -6,14 +6,6 @@
 #include <memory>
 #include <string_view>
 
-struct TypeRef {
-  DATA_TYPES data_type = DATA_TYPES::VOID;
-  std::string_view name;
-};
-struct ParameterDecl {
-  TypeRef type;
-  std::string_view name;
-};
 class Function : public Statements {
 public:
   static std::unique_ptr<Statements> parse_function(Parser &parser);

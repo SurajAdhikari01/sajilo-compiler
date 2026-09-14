@@ -71,6 +71,8 @@ enum class TokenType {
   NISKI,
   MANAU,
   JABASAMMA,
+  DOHORAU,
+  CONST,
 
   WRITE,
   READ,

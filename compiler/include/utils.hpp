@@ -10,6 +10,14 @@ enum class DATA_TYPES {
   BOOL,
   USER_DEFINED,
 };
+struct TypeRef {
+  DATA_TYPES data_type = DATA_TYPES::VOID;
+  std::string_view name;
+};
+struct ParameterDecl {
+  TypeRef type;
+  std::string_view name;
+};
 inline DATA_TYPES get_datatypes(const std::string_view keyword) {
   constexpr static std::pair<std::string, DATA_TYPES> m_datatype_map[] = {
       {"int", DATA_TYPES::INT},   {"void", DATA_TYPES::VOID},

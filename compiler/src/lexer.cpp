@@ -10,7 +10,7 @@ static bool isKeyword(const std::string_view value, Token &token) {
       {"deu", {TokenType::DEU}},       {"int", {TokenType::KEYWORD, "int"}},
       {"niski", {TokenType::NISKI}},   {"func", {TokenType::FUNC}},
       {"manau", {TokenType::MANAU}},   {"jabasamma", {TokenType::JABASAMMA}},
-      {"exit", {TokenType::EXIT}}
+      {"exit", {TokenType::EXIT}},     {"const", {TokenType::CONST}},
 
   };
   for (const auto &[map_view, map_token] : keyword_map) {
