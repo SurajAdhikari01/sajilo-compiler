@@ -1,18 +1,21 @@
-manau str : string = "Hello suraj";
-bol str;
-
-bol str;
-niski(40);
-
-
-parser :
-current_token ->aile ko current token dini
-peek_token -> offset -> check valid -> return token
-check -> token name -> if current match va vane true 
-check any of -> multiple token -> if any match true else false--> also send which token match through pointer ko Value
-match - > token name -> if match consume ret true natra false
-match any of ->
-expect -> token name , error msg if match na vaye print error natra consume
-expect any of ->
+func main(int var, int hell ) -> deu(int)  {
+manau:const int number = 10;
+manau int number = a+b;
+  write(a + b, buffer_len);
+  jaba(a + b) {
+    a + b;
+    c + d;
+    laijau(test);
+  } natra {
+    c + d;
+    exit(c);
+  }
+  jabasamma(a + b) {
+    a + b;
+    laijau(test);
+  }
+  read(buffer,buffer_len);
+  exit(buffer + buffer_len);
+}
 
 

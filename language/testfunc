@@ -1,14 +1,18 @@
+#exit(10);
+
+
 func make( int var) -> deu(int)  {
 # write(!!!!!!!!!!var,size);
 # !(!!!!!1+ 2 )- (3  *4);
-1+2-3;
+# 1+2-3;
 
-
-jaba(a+b){
-niski(a+b);
 exit(a+b);
-  }
-
+#jaba(a+b){
+#niski(a+b);
+#exit(a+b);
+#  }
+#manau:const int number = 10;
+#manau int number = a+b;
 # read(var,sizze);
  } 
 

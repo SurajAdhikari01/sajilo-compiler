@@ -28,6 +28,13 @@ void Parser::parse() {
       return;
     }
   }
+  for (const auto &ptr : statements) {
+    if (!ptr->analyze_semantics()) {
+      std::cout << "invalid semantics\n";
+      return;
+    }
+  }
+  return;
   CodeGenContext context;
   context.code << "_start:\n";
   for (const auto &ptr : statements) {

@@ -1,4 +1,5 @@
 #include "Expression/PrimaryExpression.hpp"
+#include "parser.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>

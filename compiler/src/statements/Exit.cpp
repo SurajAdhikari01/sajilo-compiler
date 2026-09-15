@@ -28,3 +28,15 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
 }
 
 void Exit::generate(CodeGenContext &) {}
+bool Exit::analyze_semantics() {
+  auto primary_expr = dynamic_cast<PrimaryExpression *>(exit_expr.get());
+  if (!primary_expr) {
+    return false;
+  }
+  if (primary_expr->primary_type ==
+      PrimaryExpression::PRIMARY_TYPE::INT_LITERAL) {
+    return true;
+  }
+
+  return false;
+};

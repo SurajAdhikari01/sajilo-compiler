@@ -91,10 +91,16 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
     return nullptr;
   }
   if (temp_token == TokenType::LEFT_BRACE) {
-    Scope::parse_scope(parser);
+
+    func_stmt->body = Scope::parse_scope(parser);
+    if (!func_stmt->body) {
+      return nullptr;
+    }
   }
 
-  return std::make_unique<Function>();
+  return func_stmt;
 }
 
 void Function::generate(CodeGenContext &) {}
+
+bool Function::analyze_semantics() { return body->analyze_semantics(); };

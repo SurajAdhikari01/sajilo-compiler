@@ -13,4 +13,5 @@ public:
   Statements() {};
   virtual ~Statements() {};
   virtual void generate(CodeGenContext &) = 0;
+  virtual bool analyze_semantics() = 0;
 };

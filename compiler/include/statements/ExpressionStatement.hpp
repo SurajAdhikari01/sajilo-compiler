@@ -24,7 +24,8 @@ public:
     return expr_statement;
   };
 
-  void generate(CodeGenContext &) {};
+  void generate(CodeGenContext &) override {};
+  virtual bool analyze_semantics() override { return true; };
 
 private:
   std::unique_ptr<Expression> expr;

@@ -19,3 +19,13 @@ std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
 };
 
 void Scope::generate(CodeGenContext &) {};
+
+bool Scope::analyze_semantics() {
+  for (const auto &ptr : statements) {
+    if (!ptr->analyze_semantics()) {
+      return false;
+    }
+  }
+
+  return true;
+};

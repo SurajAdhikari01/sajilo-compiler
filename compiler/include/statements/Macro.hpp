@@ -1,6 +1,9 @@
 #pragma once
 
-class Marco {
+#include "statements/statements.hpp"
+class Marco : public Statements {
 public:
+  virtual bool analyze_semantics() override { return true; };
+
 private:
 };

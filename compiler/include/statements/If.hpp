@@ -12,6 +12,7 @@ public:
   static std::unique_ptr<Statements> parse_if(Parser &parser);
 
   virtual void generate(CodeGenContext &) override {};
+  virtual bool analyze_semantics() override { return true; };
 
 private:
   std::unique_ptr<Expression> condition;
