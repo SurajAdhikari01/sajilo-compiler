@@ -11,8 +11,11 @@
 #include <vector>
 class Parser {
 public:
-  const Token &peek_token(int offset = 1) {
-    return is_valid(offset) ? tokens[index + offset] : EOT;
+  const Token &peek_token(size_t offset = 1) const {
+    if (index >= tokens.size() || offset >= tokens.size() - index) {
+      return EOT;
+    }
+    return tokens[index + offset];
   }
   TokenType peek_token_name() { return peek_token().token; }
 
@@ -77,7 +80,9 @@ public:
     return false;
   }
 
-  const Token &current_token() const { return tokens[index]; }
+  const Token &current_token() const {
+    return index < tokens.size() ? tokens[index] : EOT;
+  }
   void advance() { ++index; };
 
   bool is_valid() { return index < tokens.size(); }

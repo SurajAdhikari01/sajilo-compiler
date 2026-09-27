@@ -22,6 +22,9 @@ if(BUILD_TESTING)
     add_executable(expression_precedence_test tests/expression_precedence_test.cpp)
     target_link_libraries(expression_precedence_test PRIVATE sajilo_compiler)
 
+    add_executable(bounds_safety_test tests/bounds_safety_test.cpp)
+    target_link_libraries(bounds_safety_test PRIVATE sajilo_compiler)
+
     add_test(NAME valid_program
         COMMAND sajilo ${CMAKE_SOURCE_DIR}/tests/data/valid.sajilo
     )
@@ -36,4 +39,5 @@ if(BUILD_TESTING)
     set_tests_properties(semantic_error PROPERTIES WILL_FAIL TRUE)
 
     add_test(NAME expression_precedence COMMAND expression_precedence_test)
+    add_test(NAME bounds_safety COMMAND bounds_safety_test)
 endif()
