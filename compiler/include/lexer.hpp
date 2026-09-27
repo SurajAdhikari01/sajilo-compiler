@@ -15,21 +15,28 @@ public:
   void set_sourceCode(std::string &source_code);
   std::string_view get_code_line(size_t line_no) const
   {
-
-    size_t start = line_start_index[line_no - 1];
+    if (line_no == 0 || line_no > line_start_index.size()) {
+      return {};
+    }
+    const size_t start = line_start_index[line_no - 1];
     size_t end = line_no < line_start_index.size()
-                     ? line_start_index[line_no] - 1
+                     ? line_start_index[line_no]
                      : source_code.size();
-    if (source_code[end] == '\n' && end > start)
-    {
-
+    if (end > start && source_code[end - 1] == '\n') {
       --end;
     }
-    return source_code.substr(start, end - start + 1);
+    if (end > start && source_code[end - 1] == '\r') {
+      --end;
+    }
+    return source_code.substr(start, end - start);
   }
 
 private:
-  char peek() const { return isValid() ? source_code[index + 1] : '\0'; };
+  char peek() const {
+    return index < source_code.size() && source_code.size() - index > 1
+               ? source_code[index + 1]
+               : '\0';
+  };
   void consume()
   {
     current_column++;
@@ -51,7 +58,6 @@ private:
     token.current_column = current_column;
     tokens.push_back(token);
   }
-  const char *get_current_ptr() const { return source_code.data() + index; };
   void process_string_literal();
   void process_new_line()
   {

@@ -268,12 +268,16 @@ void Lexer::process_keyword(char c) {
   auto isChar = [](char c) -> bool {
     return ('A' <= c && c <= 'Z' || 'a' <= c && c <= 'z' || '_' == c);
   };
-  const char *first_ptr = get_current_ptr();
+  size_t first_index = index;
   if (isChar(c)) {
-    while (isChar(peek()) || isNum(peek())) {
+    while (true) {
+      const char next = peek();
+      if (!isChar(next) && !isNum(next)) {
+        break;
+      }
       consume();
     }
-    buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
+    buffer = source_code.substr(first_index, index - first_index + 1);
     if (Token token; isKeyword(buffer, token)) {
       add_token(token);
     } else {
@@ -281,31 +285,31 @@ void Lexer::process_keyword(char c) {
     }
   }
   if (isNum(c)) {
-    first_ptr = get_current_ptr();
+    first_index = index;
 
-    while (isNum(peek())) {
+    while (true) {
+      const char next = peek();
+      if (!isNum(next)) {
+        break;
+      }
       consume();
     }
-    buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
+    buffer = source_code.substr(first_index, index - first_index + 1);
     add_token({TokenType::INT_LITERAL, buffer});
   }
 };
 
 void Lexer::process_string_literal() {
-  if (peek() == '"') {
-    add_token({TokenType::STRING_LITERAL});
-    consume();
-    return;
-  }
-
   consume();
-  const char *first_ptr = get_current_ptr();
-  while (peek() != '"' && peek() != '\0') {
-    consume();
+  const size_t first_index = index;
+  while (isValid() && source_code[index] != '"') {
+    if (source_code[index] == '\n') {
+      process_new_line();
+      ++index;
+    } else {
+      consume();
+    }
   }
-  buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);
+  buffer = source_code.substr(first_index, index - first_index);
   add_token({TokenType::STRING_LITERAL, buffer});
-
-  consume();
-  return;
 }

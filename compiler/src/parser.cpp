@@ -19,22 +19,22 @@
 #include <memory>
 #include <sstream>
 
-void Parser::parse() {
+bool Parser::parse() {
 
   for (; index < tokens.size(); ++index) {
 
     if (!add_statement(parse_statement())) {
       std::cerr << "Syntax error\n" << current_token().value;
-      return;
+      return false;
     }
   }
   for (const auto &ptr : statements) {
     if (!ptr->analyze_semantics()) {
       std::cout << "invalid semantics\n";
-      return;
+      return false;
     }
   }
-  return;
+  return true;
   CodeGenContext context;
   context.code << "_start:\n";
   for (const auto &ptr : statements) {
