@@ -38,6 +38,9 @@ public:
       : bn_operators(bn_operators), left(std::move(left)),
         right(std::move(right)) {};
   std::unique_ptr<Expression> parse_expression(Parser &parser);
+  BN_OPERATORS get_operator() const { return bn_operators; }
+  const Expression *get_left() const { return left.get(); }
+  const Expression *get_right() const { return right.get(); }
 
 private:
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;

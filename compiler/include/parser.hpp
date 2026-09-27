@@ -86,7 +86,7 @@ public:
     this->tokens = std::move(tokens);
   }
   std::unique_ptr<Statements> parse_statement();
-  void parse();
+  [[nodiscard]] bool parse();
   bool add_statement(std::unique_ptr<Statements> statement) {
 
     if (statement) {

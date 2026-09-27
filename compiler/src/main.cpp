@@ -27,7 +27,5 @@ int main(int argc, char *argv[]) {
   parser.set_lexer(lexer);
   parser.set_tokens(lexer.get_tokens());
 
-  parser.parse();
-
-  return 0;
+  return parser.parse() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
