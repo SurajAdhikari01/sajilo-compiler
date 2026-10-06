@@ -1,6 +1,7 @@
 #include "statements/Manau.hpp"
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
+#include "parser.hpp"
 #include "symbolTable.hpp"
 #include "token.hpp"
 #include "utils.hpp"
@@ -48,3 +49,11 @@ std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
   return manau_stmt;
 }
 void Manau::generate(CodeGenContext &) {}
+
+bool Manau::analyze_semantics(Parser &parser) {
+  if (!is_compatible_datatype(data_type.data_type, expr->get_primary_type())) {
+    std::cout << " manau invalid semantics\n";
+    return false;
+  }
+  return true;
+}

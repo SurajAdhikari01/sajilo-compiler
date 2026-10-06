@@ -29,7 +29,7 @@ void Parser::parse() {
     }
   }
   for (const auto &ptr : statements) {
-    if (!ptr->analyze_semantics()) {
+    if (!ptr->analyze_semantics(*this)) {
       std::cout << "invalid semantics\n";
       return;
     }

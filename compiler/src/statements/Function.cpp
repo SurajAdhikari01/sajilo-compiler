@@ -103,4 +103,6 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
 
 void Function::generate(CodeGenContext &) {}
 
-bool Function::analyze_semantics() { return body->analyze_semantics(); };
+bool Function::analyze_semantics(Parser &parser) {
+  return body->analyze_semantics(parser);
+};

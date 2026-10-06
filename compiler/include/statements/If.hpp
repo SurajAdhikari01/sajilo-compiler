@@ -1,9 +1,9 @@
 #pragma once
 
 #include "Expression/Expression.hpp"
-#include "parser.hpp"
 #include "statements/statements.hpp"
 #include <memory>
+class Parser;
 class If : public Statements {
 
 public:
@@ -12,7 +12,7 @@ public:
   static std::unique_ptr<Statements> parse_if(Parser &parser);
 
   virtual void generate(CodeGenContext &) override {};
-  virtual bool analyze_semantics() override { return true; };
+  virtual bool analyze_semantics(Parser &parser) override { return true; };
 
 private:
   std::unique_ptr<Expression> condition;

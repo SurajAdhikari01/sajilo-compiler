@@ -8,7 +8,8 @@ class Scope : public Statements {
 public:
   static std::unique_ptr<Statements> parse_scope(Parser &parser);
   virtual void generate(CodeGenContext &) override;
-  virtual bool analyze_semantics() override;
+
+  virtual bool analyze_semantics(Parser &parser) override;
 
 private:
   std::vector<std::unique_ptr<Statements>> statements;

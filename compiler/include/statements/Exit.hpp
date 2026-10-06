@@ -8,7 +8,8 @@ class Exit : public Statements {
 public:
   static std::unique_ptr<Statements> parse_exit(Parser &parser);
   virtual void generate(CodeGenContext &) override;
-  virtual bool analyze_semantics() override;
+
+  virtual bool analyze_semantics(Parser &parser) override;
 
 private:
   std::unique_ptr<Expression> exit_expr;

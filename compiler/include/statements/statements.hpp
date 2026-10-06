@@ -2,6 +2,7 @@
 
 #include <cstdint>
 #include <sstream>
+class Parser;
 struct CodeGenContext {
   std::stringstream code;
   std::stringstream data;
@@ -13,5 +14,5 @@ public:
   Statements() {};
   virtual ~Statements() {};
   virtual void generate(CodeGenContext &) = 0;
-  virtual bool analyze_semantics() = 0;
+  virtual bool analyze_semantics(Parser &parser) = 0;
 };

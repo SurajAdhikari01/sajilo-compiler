@@ -25,7 +25,7 @@ public:
   };
 
   void generate(CodeGenContext &) override {};
-  virtual bool analyze_semantics() override { return true; };
+  virtual bool analyze_semantics(Parser &parser) override { return true; };
 
 private:
   std::unique_ptr<Expression> expr;

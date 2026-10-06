@@ -6,7 +6,8 @@
 #include <string_view>
 #include <utility>
 #include <vector>
-enum class BN_OPERATORS {
+enum class BN_OPERATORS
+{
   NONE,
   ADDITION,
   SUBTRACTION,
@@ -30,7 +31,8 @@ enum class BN_OPERATORS {
   INDEXING,
   ARROW
 };
-class BinaryExpression : public Expression {
+class BinaryExpression : public Expression
+{
 public:
   BinaryExpression() {};
   BinaryExpression(BN_OPERATORS bn_operators, std::unique_ptr<Expression> left,
@@ -38,6 +40,7 @@ public:
       : bn_operators(bn_operators), left(std::move(left)),
         right(std::move(right)) {};
   std::unique_ptr<Expression> parse_expression(Parser &parser);
+  virtual PRIMARY_TYPE get_primary_type() override { return PRIMARY_TYPE::VOID; }
 
 private:
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;
