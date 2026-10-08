@@ -1,14 +1,14 @@
 #pragma once
+#include "utils.hpp"
 #include <optional>
 #include <string>
 #include <string_view>
 #include <unordered_map>
 #include <utility>
 #include <vector>
-enum class DataTypes { INT, STRING, USER_DEFINED, NONE };
-
+//
 struct decleration_data {
-  DataTypes dataType = DataTypes::NONE;
+  TypeRef type;
   bool isConst = false;
   std::string value;
 };
@@ -16,7 +16,7 @@ struct decleration_data {
 class SymbolTable {
 
 public:
-  std::optional<decleration_data> lookup(const std::string &key) {
+  std::optional<decleration_data> lookup(const std::string_view key) {
     for (auto it = symbolTable.rbegin(); it != symbolTable.rend(); ++it) {
       auto &map = it->first;
       auto m_it = map.find(key);

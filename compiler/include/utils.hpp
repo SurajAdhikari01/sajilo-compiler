@@ -1,24 +1,36 @@
 #pragma once
 
-#include "Expression/PrimaryExpression.hpp"
+#include <cstdint>
 #include <string>
 #include <string_view>
+
 enum class PRIMITIVE_DATA_TYPES {
   INT,
   CHAR,
   VOID,
   FLOAT,
   BOOL,
+  STRING,
+  IDENTIFIER,
+  UNEXPECTED,
   USER_DEFINED,
 };
+
+struct SourceLocation {
+  uint32_t line{};
+  uint32_t col{};
+};
+
 struct TypeRef {
   PRIMITIVE_DATA_TYPES data_type = PRIMITIVE_DATA_TYPES::VOID;
   std::string_view name;
 };
+
 struct ParameterDecl {
   TypeRef type;
   std::string_view name;
 };
+
 inline PRIMITIVE_DATA_TYPES get_datatypes(const std::string_view keyword) {
   constexpr static std::pair<std::string, PRIMITIVE_DATA_TYPES>
       m_datatype_map[] = {
@@ -47,17 +59,6 @@ enum class DATATYPE_COMPATABILITY : DATATYPES_COMPATIBILITY_VALUE {
 };
 
 inline DATATYPE_COMPATABILITY
-get_datatype_compatability_from_primary(PRIMARY_TYPE primary_type) {
-  switch (primary_type) {
-  case PRIMARY_TYPE::INT_LITERAL:
-    return DATATYPE_COMPATABILITY::INT;
-
-  default:
-    return DATATYPE_COMPATABILITY::VOID;
-  }
-}
-
-inline DATATYPE_COMPATABILITY
 get_datatype_compatability_from_primitive(PRIMITIVE_DATA_TYPES primitive_type) {
   switch (primitive_type) {
   case PRIMITIVE_DATA_TYPES::INT:
@@ -75,9 +76,9 @@ get_datatype_compatability_from_primitive(PRIMITIVE_DATA_TYPES primitive_type) {
 // }
 
 inline bool is_compatible_datatype(PRIMITIVE_DATA_TYPES primitive,
-                                   PRIMARY_TYPE primary) {
+                                   PRIMITIVE_DATA_TYPES primary) {
   auto primary_to_datatype_compatibility =
-      get_datatype_compatability_from_primary(primary);
+      get_datatype_compatability_from_primitive(primary);
   auto primitive_to_datatype_compatibility =
       get_datatype_compatability_from_primitive(primitive);
   return static_cast<int>(primary_to_datatype_compatibility) &
@@ -88,3 +89,5 @@ inline std::string string_view_to_string(std::string_view sv) {
 }
 class Parser;
 void print_error(const Parser &parser, std::string_view error_msg);
+void print_error(const Parser &parser, std::string_view error_msg,
+                 const SourceLocation &);

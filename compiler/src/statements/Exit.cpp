@@ -4,12 +4,14 @@
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
+#include "utils.hpp"
 #include <cstddef>
 #include <memory>
 
 std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
   parser.advance();
   auto exit_stmt = std::make_unique<Exit>();
+  exit_stmt->location.line = parser.current_token().line_number;
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
@@ -29,13 +31,15 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
 
 void Exit::generate(CodeGenContext &) {}
 bool Exit::analyze_semantics(Parser &parser) {
-  auto primary_expr = dynamic_cast<PrimaryExpression *>(exit_expr.get());
-  if (!primary_expr) {
+  auto type = exit_expr->get_primitive_type();
+  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
+    print_error(parser, error::UseOfUndefined, location);
     return false;
   }
-  if (primary_expr->primary_type == PRIMARY_TYPE::INT_LITERAL) {
-    return true;
-  }
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
 
-  return false;
+    print_error(parser, error::IncompatibleTypes, location);
+    return false;
+  }
+  return true;
 };

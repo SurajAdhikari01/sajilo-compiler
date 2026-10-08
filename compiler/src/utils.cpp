@@ -10,3 +10,10 @@ void print_error(const Parser &parser, std::string_view error_msg) {
   std::cout << line << std::endl;
   std::cout << error_msg << std::endl;
 };
+
+void print_error(const Parser &parser, std::string_view error_msg,
+                 const SourceLocation &loc) {
+  const auto line = parser.get_lexer().get_code_line(loc.line);
+  std::cout << line << std::endl;
+  std::cout << error_msg << std::endl;
+}

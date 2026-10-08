@@ -1,5 +1,6 @@
 #pragma once
 
+#include "utils.hpp"
 #include <cstdint>
 #include <sstream>
 class Parser;
@@ -15,4 +16,7 @@ public:
   virtual ~Statements() {};
   virtual void generate(CodeGenContext &) = 0;
   virtual bool analyze_semantics(Parser &parser) = 0;
+
+protected:
+  SourceLocation location;
 };

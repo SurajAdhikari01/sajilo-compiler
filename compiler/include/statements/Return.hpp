@@ -10,8 +10,8 @@ public:
   static std::unique_ptr<Statements> parse_return(Parser &parser);
   virtual void generate(CodeGenContext &) override;
 
-  virtual bool analyze_semantics(Parser &parser) override { return true; };
+  virtual bool analyze_semantics(Parser &parser) override;
 
 private:
-  std::unique_ptr<Expression> return_value;
+  std::unique_ptr<Expression> return_expr;
 };

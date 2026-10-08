@@ -6,12 +6,11 @@
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
-#include <iostream>
 #include <memory>
-#include <ostream>
 
 std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
   std::unique_ptr<Manau> manau_stmt = std::make_unique<Manau>();
+  manau_stmt->location.line = parser.current_token().line_number;
   parser.advance();
 
   if (parser.match(TokenType::COLON)) {
@@ -51,9 +50,26 @@ std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
 void Manau::generate(CodeGenContext &) {}
 
 bool Manau::analyze_semantics(Parser &parser) {
-  if (!is_compatible_datatype(data_type.data_type, expr->get_primary_type())) {
-    std::cout << " manau invalid semantics\n";
+  decleration_data data;
+  data.type = data_type;
+  data.isConst = isConst;
+
+  if (!get_table().insert(name, data)) {
+    print_error(parser, error::RedefinitionOfSymbol, location);
     return false;
   }
+  if (!expr) {
+    return true;
+  }
+  auto type = expr->get_primitive_type();
+  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
+    print_error(parser, error::UseOfUndefined, location);
+    return false;
+  }
+  if (!is_compatible_datatype(data_type.data_type, type)) {
+    print_error(parser, error::IncompatibleTypes, location);
+    return false;
+  }
+
   return true;
 }
