@@ -1,21 +1,28 @@
 func main(int var, int hell ) -> deu(int)  {
-manau:const int number = 10;
-manau int number = a+b;
-  write(a + b, buffer_len);
+manau int x ;
+#manau int number = 10;
+ # write(a + b, buffer_len);
+ manau int test = 10;
+ manau int a=1;
+ manau int b=2;
+
+
   jaba(a + b) {
     a + b;
-    c + d;
-    laijau(test);
+       laijau(test);
   } natra {
-    c + d;
-    exit(c);
+        #exit(c);
   }
-  jabasamma(a + b) {
+  {
     a + b;
     laijau(test);
-  }
-  read(buffer,buffer_len);
-  exit(buffer + buffer_len);
+     }
+
+  manau:const int number = 10 ;
+
+ manau string buffer = "suraj";
+  read(buffer,number);
+  exit(number);
 }
 
 

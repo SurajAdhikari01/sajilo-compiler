@@ -6,7 +6,7 @@ func make( int var) -> deu(int)  {
 # !(!!!!!1+ 2 )- (3  *4);
 # 1+2-3;
 
-exit(a+b);
+exit(10);
 #jaba(a+b){
 #niski(a+b);
 #exit(a+b);

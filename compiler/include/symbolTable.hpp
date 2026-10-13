@@ -18,10 +18,13 @@ class SymbolTable {
 public:
   std::optional<decleration_data> lookup(const std::string_view key) {
     for (auto it = symbolTable.rbegin(); it != symbolTable.rend(); ++it) {
-      auto &map = it->first;
-      auto m_it = map.find(key);
-      if (m_it != map.end()) {
-        return m_it->second;
+      if (it->second) {
+        auto &map = it->first;
+        auto m_it = map.find(key);
+
+        if (m_it != map.end()) {
+          return m_it->second;
+        }
       }
     }
 
@@ -31,16 +34,25 @@ public:
     if (find(key)) {
       return false;
     }
-    auto &map = symbolTable.back().first;
-    map[key] = value;
-    return true;
+    for (auto it = symbolTable.rbegin(); it != symbolTable.rend(); ++it) {
+      if (it->second) {
+        auto &map = it->first;
+        map[key] = value;
+        return true;
+      }
+    }
+    return false;
   }
 
   bool find(std::string_view key) {
-    auto &map = symbolTable.back().first;
-    auto it = map.find(key);
-    if (it != map.end()) {
-      return true;
+    for (auto it = symbolTable.rbegin(); it != symbolTable.rend(); ++it) {
+      if (it->second) {
+        auto &map = it->first;
+        auto it = map.find(key);
+        if (it != map.end()) {
+          return true;
+        }
+      }
     }
     return false;
   }
@@ -49,7 +61,14 @@ public:
     symbolTable.push_back({});
     symbolTable.back().second = true;
   };
-  void exit_scope() { symbolTable.back().second = false; }
+  void exit_scope() {
+    for (auto it = symbolTable.rbegin(); it != symbolTable.rend(); it++) {
+      if (it->second) {
+        it->second = false;
+        break;
+      }
+    }
+  }
   friend SymbolTable &get_table();
 
 private:

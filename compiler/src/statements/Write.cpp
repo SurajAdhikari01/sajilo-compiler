@@ -7,6 +7,8 @@
 #include <memory>
 std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   auto write_stmt = std::make_unique<Write>();
+
+  write_stmt->location.line = parser.current_token().line_number;
   parser.advance();
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
@@ -34,3 +36,29 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
 }
 
 void Write::generate(CodeGenContext &) {}
+
+bool Write::analyze_semantics(Parser &parser) {
+  auto type = variable->get_primitive_type();
+  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
+    print_error(parser, error::UseOfUndefined, location);
+    return false;
+  }
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::STRING, type)) {
+
+    print_error(parser, error::IncompatibleTypes, location);
+    return false;
+  }
+
+  type = length->get_primitive_type();
+  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
+    print_error(parser, error::UseOfUndefined, location);
+    return false;
+  }
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
+
+    print_error(parser, error::IncompatibleTypes, location);
+    return false;
+  }
+
+  return true;
+}

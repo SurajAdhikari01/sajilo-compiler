@@ -29,6 +29,7 @@ struct TypeRef {
 struct ParameterDecl {
   TypeRef type;
   std::string_view name;
+  SourceLocation location;
 };
 
 inline PRIMITIVE_DATA_TYPES get_datatypes(const std::string_view keyword) {
@@ -39,6 +40,7 @@ inline PRIMITIVE_DATA_TYPES get_datatypes(const std::string_view keyword) {
           {"char", PRIMITIVE_DATA_TYPES::CHAR},
           {"float", PRIMITIVE_DATA_TYPES::FLOAT},
           {"bool", PRIMITIVE_DATA_TYPES::BOOL},
+          {"string", PRIMITIVE_DATA_TYPES::STRING},
       };
   for (const auto &[view, data_type] : m_datatype_map) {
     if (view == keyword) {
@@ -56,6 +58,8 @@ enum class DATATYPE_COMPATABILITY : DATATYPES_COMPATIBILITY_VALUE {
   DOUBLE = 1 << 3,
   BINARY = 1 << 4,
   HEX = 1 << 5,
+  CHAR = 1 << 6,
+  STRING = 1 << 7,
 };
 
 inline DATATYPE_COMPATABILITY
@@ -63,6 +67,10 @@ get_datatype_compatability_from_primitive(PRIMITIVE_DATA_TYPES primitive_type) {
   switch (primitive_type) {
   case PRIMITIVE_DATA_TYPES::INT:
     return DATATYPE_COMPATABILITY::INT;
+  case PRIMITIVE_DATA_TYPES::CHAR:
+    return DATATYPE_COMPATABILITY::CHAR;
+  case PRIMITIVE_DATA_TYPES::STRING:
+    return DATATYPE_COMPATABILITY::STRING;
 
   default:
     break;

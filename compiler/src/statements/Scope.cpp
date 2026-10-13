@@ -1,6 +1,7 @@
 #include "statements/Scope.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
+#include "symbolTable.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
@@ -21,11 +22,12 @@ std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
 void Scope::generate(CodeGenContext &) {};
 
 bool Scope::analyze_semantics(Parser &parser) {
+  get_table().enter_scope();
   for (const auto &ptr : statements) {
     if (!ptr->analyze_semantics(parser)) {
       return false;
     }
   }
-
+  get_table().exit_scope();
   return true;
 };

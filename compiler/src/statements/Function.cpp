@@ -3,6 +3,7 @@
 #include "parser.hpp"
 #include "statements/Scope.hpp"
 #include "statements/statements.hpp"
+#include "symbolTable.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
@@ -21,12 +22,15 @@ std::optional<std::vector<ParameterDecl>> parse_parameter(Parser &parser) {
   ParameterDecl param;
 
   while (true) {
+
     if (!parser.check_any_of({TokenType::KEYWORD, TokenType::IDENTIFIER})) {
       print_error(parser, "");
       return {};
     }
     param.type.name = parser.current_token().value;
     param.type.data_type = get_datatypes(param.type.name);
+    param.location.line = parser.current_token().line_number;
+
     parser.advance();
 
     if (!parser.check(TokenType::IDENTIFIER)) {
@@ -104,5 +108,20 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
 void Function::generate(CodeGenContext &) {}
 
 bool Function::analyze_semantics(Parser &parser) {
-  return body->analyze_semantics(parser);
+  get_table().enter_scope();
+  decleration_data data;
+
+  for (const auto param : parameters) {
+
+    data.type = param.type;
+    data.isConst = false;
+
+    if (!get_table().insert(param.name, data)) {
+      print_error(parser, error::RedefinitionOfSymbol, param.location);
+      return false;
+    }
+  }
+  auto value = body->analyze_semantics(parser);
+  get_table().exit_scope();
+  return value;
 };
