@@ -9,6 +9,10 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override {
     return PRIMITIVE_DATA_TYPES::VOID;
   }
+  virtual bool analyze_symantics(Parser &parser,
+                                 const SourceLocation &) override {
+    return true;
+  };
 
 private:
   enum class TN_OPERATORS { QUESTION_MARK } tn_operators;

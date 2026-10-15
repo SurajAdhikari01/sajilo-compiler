@@ -1,15 +1,17 @@
 #include "statements/If.hpp"
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
+#include "parser.hpp"
 #include "statements/Scope.hpp"
 #include "token.hpp"
 #include <cstddef>
-#include <iostream>
 #include <memory>
+#include <type_traits>
 
 std::unique_ptr<Statements> If::parse_if(Parser &parser) {
   parser.advance();
   auto if_stmt = std::make_unique<If>();
+  if_stmt->location.line = parser.current_token().line_number;
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
@@ -43,4 +45,13 @@ std::unique_ptr<Statements> If::parse_if(Parser &parser) {
   }
 
   return if_stmt;
+}
+
+bool If::analyze_semantics(Parser &parser) {
+  if (!condition->analyze_symantics(parser, location))
+    return false;
+  auto if_val = if_block->analyze_semantics(parser);
+  if (!else_block)
+    return if_val;
+  return if_val && else_block->analyze_semantics(parser);
 }

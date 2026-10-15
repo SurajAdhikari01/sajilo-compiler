@@ -36,9 +36,9 @@ public:
       : bn_operators(bn_operators), left(std::move(left)),
         right(std::move(right)) {};
   std::unique_ptr<Expression> parse_expression(Parser &parser);
-  virtual PRIMITIVE_DATA_TYPES get_primitive_type() override {
-    return PRIMITIVE_DATA_TYPES::VOID;
-  }
+  virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
+  virtual bool analyze_symantics(Parser &parser,
+                                 const SourceLocation &) override;
 
 private:
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;

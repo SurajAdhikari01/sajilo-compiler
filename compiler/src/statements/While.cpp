@@ -11,6 +11,7 @@
 std::unique_ptr<Statements> While::parse_while(Parser &parser) {
   parser.advance();
   auto while_stmt = std::make_unique<While>();
+  while_stmt->location.line = parser.current_token().line_number;
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
   }
@@ -32,4 +33,10 @@ std::unique_ptr<Statements> While::parse_while(Parser &parser) {
   }
 
   return while_stmt;
+}
+
+bool While::analyze_semantics(Parser &parser) {
+  if (!condition->analyze_symantics(parser, location))
+    return false;
+  return while_block->analyze_semantics(parser);
 }

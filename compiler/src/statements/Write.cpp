@@ -38,24 +38,21 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
 void Write::generate(CodeGenContext &) {}
 
 bool Write::analyze_semantics(Parser &parser) {
-  auto type = variable->get_primitive_type();
-  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
-    print_error(parser, error::UseOfUndefined, location);
+  if (!variable->analyze_symantics(parser, location))
     return false;
-  }
-  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::STRING, type)) {
 
+  auto type = variable->get_primitive_type();
+
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::STRING, type)) {
     print_error(parser, error::IncompatibleTypes, location);
     return false;
   }
 
-  type = length->get_primitive_type();
-  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
-    print_error(parser, error::UseOfUndefined, location);
+  if (!length->analyze_symantics(parser, location))
     return false;
-  }
-  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
 
+  type = length->get_primitive_type();
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
     print_error(parser, error::IncompatibleTypes, location);
     return false;
   }

@@ -61,11 +61,9 @@ bool Manau::analyze_semantics(Parser &parser) {
   if (!expr) {
     return true;
   }
-  auto type = expr->get_primitive_type();
-  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
-    print_error(parser, error::UseOfUndefined, location);
+  if (!expr->analyze_symantics(parser, location))
     return false;
-  }
+  auto type = expr->get_primitive_type();
   if (!is_compatible_datatype(data_type.data_type, type)) {
     print_error(parser, error::IncompatibleTypes, location);
     return false;

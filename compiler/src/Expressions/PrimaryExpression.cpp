@@ -1,4 +1,5 @@
 #include "Expression/PrimaryExpression.hpp"
+#include "Error.hpp"
 #include "parser.hpp"
 #include "symbolTable.hpp"
 #include "token.hpp"
@@ -37,4 +38,19 @@ PRIMITIVE_DATA_TYPES PrimaryExpression::get_primitive_type() {
     return data->type.data_type;
   }
   return primitive_data_type;
+}
+
+bool PrimaryExpression::analyze_symantics(Parser &parser,
+                                          const SourceLocation &location) {
+  if (primitive_data_type != PRIMITIVE_DATA_TYPES::IDENTIFIER)
+    return true;
+  auto data = get_table().lookup(value);
+  PRIMITIVE_DATA_TYPES type =
+      data ? data->type.data_type : PRIMITIVE_DATA_TYPES::UNEXPECTED;
+  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
+    print_error(parser, error::UseOfUndefined, location);
+    return false;
+  }
+
+  return true;
 }

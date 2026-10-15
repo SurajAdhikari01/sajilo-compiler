@@ -306,7 +306,7 @@ void Lexer::process_string_literal() {
 
   consume();
   const char *first_ptr = get_current_ptr();
-  while (peek() != '"' && peek() != '\0') {
+  while (peek() != '"') {
     consume();
   }
   buffer = std::string_view(first_ptr, get_current_ptr() - first_ptr + 1);

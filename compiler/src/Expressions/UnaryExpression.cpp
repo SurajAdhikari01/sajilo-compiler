@@ -3,6 +3,7 @@
 #include "Expression/PrimaryExpression.hpp"
 #include "parser.hpp"
 #include "token.hpp"
+#include "utils.hpp"
 #include <cstddef>
 #include <initializer_list>
 #include <memory>
@@ -76,4 +77,9 @@ UnaryExpression::parse_postfix(Parser &parser,
   unaryExpr->un_operand = Expression::parse_expression(parser);
 
   return unaryExpr;
+}
+
+bool UnaryExpression::analyze_symantics(Parser &parser,
+                                        const SourceLocation &location) {
+  return true;
 }

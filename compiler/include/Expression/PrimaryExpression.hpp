@@ -8,6 +8,9 @@ class PrimaryExpression : public Expression {
 public:
   static std::unique_ptr<Expression> parse_primary(Parser &parser);
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
+  virtual bool analyze_symantics(Parser &parser,
+                                 const SourceLocation &) override;
+
   PRIMITIVE_DATA_TYPES primitive_data_type = PRIMITIVE_DATA_TYPES::VOID;
   std::string_view value;
 };

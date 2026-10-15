@@ -15,7 +15,6 @@
 #include "token.hpp"
 #include <cstddef>
 #include <fstream>
-#include <iostream>
 #include <memory>
 #include <sstream>
 
@@ -24,13 +23,11 @@ void Parser::parse() {
   for (; index < tokens.size(); ++index) {
 
     if (!add_statement(parse_statement())) {
-      std::cerr << "Syntax error\n" << current_token().value;
       return;
     }
   }
   for (const auto &ptr : statements) {
     if (!ptr->analyze_semantics(*this)) {
-      std::cout << "invalid semantics\n";
       return;
     }
   }

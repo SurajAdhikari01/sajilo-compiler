@@ -33,14 +33,11 @@ std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
 
 void Return::generate(CodeGenContext &) {};
 bool Return::analyze_semantics(Parser &parser) {
-
-  auto type = return_expr->get_primitive_type();
-  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
-    print_error(parser, error::UseOfUndefined, location);
+  if (!return_expr->analyze_symantics(parser, location))
     return false;
-  }
-  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
+  auto type = return_expr->get_primitive_type();
 
+  if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
     print_error(parser, error::IncompatibleTypes, location);
     return false;
   }

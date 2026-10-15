@@ -19,6 +19,7 @@ int main(int argc, char *argv[]) {
   buffer << file.rdbuf();
   std::string content = buffer.str();
   Lexer lexer;
+  lexer.set_filename(filename);
   lexer.set_sourceCode(content);
   lexer.tokenize();
 

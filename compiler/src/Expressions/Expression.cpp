@@ -15,10 +15,46 @@
 #include <utility>
 
 static std::initializer_list<TokenType> binary_tokens{
-    TokenType::PLUS, TokenType::MINUS, TokenType::ASTERISK, TokenType::SLASH};
+    TokenType::ASSIGN,        TokenType::OR,
+    TokenType::AND,           TokenType::BIT_OR,
+    TokenType::BIT_AND,       TokenType::BIT_XOR,
+    TokenType::EQUAL_EQUAL,   TokenType::NOT_EQUAL,
+    TokenType::LESS,          TokenType::GREATER,
+    TokenType::GREATER_EQUAL, TokenType::LESS_EQUAL,
+    TokenType::LEFT_SHIFT,    TokenType::RIGHT_SHIFT,
+    TokenType::PLUS,          TokenType::MINUS,
+    TokenType::ASTERISK,      TokenType::SLASH};
 
 BN_OPERATORS get_binary_operator(TokenType tokenType) {
   switch (tokenType) {
+  case TokenType::ASSIGN:
+    return BN_OPERATORS::ASSIGN_TO;
+  case TokenType::OR:
+    return BN_OPERATORS::LOGICAL_OR;
+  case TokenType::AND:
+    return BN_OPERATORS::LOGICAL_AND;
+  case TokenType::BIT_OR:
+    return BN_OPERATORS::BITWISE_OR;
+  case TokenType::BIT_AND:
+    return BN_OPERATORS::BITWISE_AND;
+  case TokenType::BIT_XOR:
+    return BN_OPERATORS::BITWISE_XOR;
+  case TokenType::EQUAL_EQUAL:
+    return BN_OPERATORS::EQUAL_TO;
+  case TokenType::NOT_EQUAL:
+    return BN_OPERATORS::NOT_EQUAL_TO;
+  case TokenType::LESS:
+    return BN_OPERATORS::LESS_THAN;
+  case TokenType::LESS_EQUAL:
+    return BN_OPERATORS::LESS_THAN_EQUAL;
+  case TokenType::GREATER:
+    return BN_OPERATORS::GREATER_THAN;
+  case TokenType::GREATER_EQUAL:
+    return BN_OPERATORS::GREATER_THAN_EQUAL;
+  case TokenType::LEFT_SHIFT:
+    return BN_OPERATORS::LEFT_SHIFT;
+  case TokenType::RIGHT_SHIFT:
+    return BN_OPERATORS::RIGHT_SHIFT;
   case TokenType::PLUS:
     return BN_OPERATORS::ADDITION;
   case TokenType::MINUS:
@@ -33,16 +69,38 @@ BN_OPERATORS get_binary_operator(TokenType tokenType) {
     return BN_OPERATORS::NONE;
   }
 }
-
 std::tuple<float, float> get_binding_power(BN_OPERATORS bn_operator) {
   switch (bn_operator) {
+  case BN_OPERATORS::ASSIGN_TO:
+    return {1.1f, 1.0f};
+  case BN_OPERATORS::LOGICAL_OR:
+    return {2.0f, 2.1f};
+  case BN_OPERATORS::LOGICAL_AND:
+    return {3.0f, 3.1f};
+  case BN_OPERATORS::BITWISE_OR:
+    return {4.0f, 4.1f};
+  case BN_OPERATORS::BITWISE_XOR:
+    return {5.0f, 5.1f};
+  case BN_OPERATORS::BITWISE_AND:
+    return {6.0f, 6.1f};
+  case BN_OPERATORS::EQUAL_TO:
+  case BN_OPERATORS::NOT_EQUAL_TO:
+    return {7.0f, 7.1f};
+  case BN_OPERATORS::LESS_THAN:
+  case BN_OPERATORS::GREATER_THAN:
+  case BN_OPERATORS::LESS_THAN_EQUAL:
+  case BN_OPERATORS::GREATER_THAN_EQUAL:
+    return {8.0f, 8.1f};
+  case BN_OPERATORS::LEFT_SHIFT:
+  case BN_OPERATORS::RIGHT_SHIFT:
+    return {9.0f, 9.1f};
   case BN_OPERATORS::ADDITION:
   case BN_OPERATORS::SUBTRACTION:
-    return {9.0f, 9.1f};
+    return {10.0f, 10.1f};
   case BN_OPERATORS::MULTIPLICATION:
   case BN_OPERATORS::DIVISION:
   case BN_OPERATORS::MODULUS:
-    return {10.0f, 10.1f};
+    return {11.0f, 11.1f};
   default:
     return {0.0f, 0.0f};
   }

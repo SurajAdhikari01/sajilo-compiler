@@ -205,7 +205,7 @@ inline constexpr std::string_view ImmutableAssignment =
 inline constexpr std::string_view UseOfUninitialized =
     "\"Use of uninitialized variable\"";
 inline constexpr std::string_view UseOfUndefined =
-    "\"Use of unindefined variable\"";
+    "\"Use of undefined variable\"";
 inline constexpr std::string_view InvalidOperandTypes =
     "\"Invalid operand types\"";
 inline constexpr std::string_view DivisionByZero = "\"Division by zero\"";

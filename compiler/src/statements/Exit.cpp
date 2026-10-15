@@ -31,11 +31,9 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
 
 void Exit::generate(CodeGenContext &) {}
 bool Exit::analyze_semantics(Parser &parser) {
-  auto type = exit_expr->get_primitive_type();
-  if (type == PRIMITIVE_DATA_TYPES::UNEXPECTED) {
-    print_error(parser, error::UseOfUndefined, location);
+  if (!exit_expr->analyze_symantics(parser, location))
     return false;
-  }
+  auto type = exit_expr->get_primitive_type();
   if (!is_compatible_datatype(PRIMITIVE_DATA_TYPES::INT, type)) {
 
     print_error(parser, error::IncompatibleTypes, location);

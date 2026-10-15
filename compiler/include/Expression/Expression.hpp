@@ -14,5 +14,9 @@ public:
     return PRIMITIVE_DATA_TYPES::VOID;
   }
 
+  virtual bool analyze_symantics(Parser &parser, const SourceLocation &) {
+    return true;
+  };
+
 private:
 };

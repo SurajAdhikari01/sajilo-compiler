@@ -23,6 +23,8 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override {
     return PRIMITIVE_DATA_TYPES::VOID;
   }
+  virtual bool analyze_symantics(Parser &parser,
+                                 const SourceLocation &) override;
 
 private:
   UN_OPERATORS un_operator = UN_OPERATORS::NONE;
