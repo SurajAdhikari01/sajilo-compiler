@@ -1,11 +1,11 @@
 #import "statements/Return.hpp"
 #include "Error.hpp"
+#include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
-#include <iostream>
 #include <memory>
 
 std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
@@ -31,7 +31,16 @@ std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
   return return_stmt;
 }
 
-void Return::generate(CodeGenContext &) {};
+void Return::generate(CodeGenContext &context) {
+
+  auto exp = return_expr->generate(context);
+  if (auto binaryExpr = dynamic_cast<BinaryExpression *>(return_expr.get());
+      binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+    exp = binaryExpr->left->generate(context);
+  }
+
+  context.code << "param " << exp << '\n' << "return()\n";
+};
 bool Return::analyze_semantics(Parser &parser) {
   if (!return_expr->analyze_symantics(parser, location))
     return false;

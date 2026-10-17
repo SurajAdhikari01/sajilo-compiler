@@ -47,7 +47,13 @@ std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
 
   return manau_stmt;
 }
-void Manau::generate(CodeGenContext &) {}
+void Manau::generate(CodeGenContext &context) {
+  if (!expr)
+    return;
+  // name = t0
+  auto exp = expr->generate(context);
+  context.code << name << " = " << exp << '\n';
+}
 
 bool Manau::analyze_semantics(Parser &parser) {
   decleration_data data;

@@ -5,7 +5,6 @@
 #include "statements/Function.hpp"
 #include "statements/If.hpp"
 #include "statements/Manau.hpp"
-#include "statements/Niski.hpp"
 #include "statements/Read.hpp"
 #include "statements/Return.hpp"
 #include "statements/Scope.hpp"
@@ -31,21 +30,15 @@ void Parser::parse() {
       return;
     }
   }
-  return;
   CodeGenContext context;
-  context.code << "_start:\n";
   for (const auto &ptr : statements) {
     ptr->generate(context);
   }
 
   std::stringstream ss;
-  ss << "section .data\n"
-     << context.data.str() << "\n"
-     << "section .text\n"
-     << "global _start\n"
-     << context.code.str();
+  ss << context.code.str();
 
-  std::ofstream file("out.asm");
+  std::ofstream file("out.ir");
   if (file.is_open()) {
     file << ss.str();
   }

@@ -208,6 +208,8 @@ inline constexpr std::string_view UseOfUndefined =
     "\"Use of undefined variable\"";
 inline constexpr std::string_view InvalidOperandTypes =
     "\"Invalid operand types\"";
+inline constexpr std::string_view InvalidAssignment = "\"Invalid assignment\"";
+
 inline constexpr std::string_view DivisionByZero = "\"Division by zero\"";
 inline constexpr std::string_view IndexOutOfBounds = "\"Index out of bounds\"";
 inline constexpr std::string_view CircularDependency =

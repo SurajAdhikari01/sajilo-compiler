@@ -105,7 +105,7 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
   return func_stmt;
 }
 
-void Function::generate(CodeGenContext &) {}
+void Function::generate(CodeGenContext &context) { body->generate(context); }
 
 bool Function::analyze_semantics(Parser &parser) {
   get_table().enter_scope();

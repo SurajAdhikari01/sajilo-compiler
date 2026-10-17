@@ -23,7 +23,8 @@ static std::initializer_list<TokenType> binary_tokens{
     TokenType::GREATER_EQUAL, TokenType::LESS_EQUAL,
     TokenType::LEFT_SHIFT,    TokenType::RIGHT_SHIFT,
     TokenType::PLUS,          TokenType::MINUS,
-    TokenType::ASTERISK,      TokenType::SLASH};
+    TokenType::ASTERISK,      TokenType::SLASH,
+    TokenType::MODULO};
 
 BN_OPERATORS get_binary_operator(TokenType tokenType) {
   switch (tokenType) {

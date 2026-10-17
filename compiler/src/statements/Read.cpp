@@ -1,5 +1,6 @@
 #include "statements/Read.hpp"
 #include "Error.hpp"
+#include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "token.hpp"
@@ -34,7 +35,28 @@ std::unique_ptr<Statements> Read::parse_read(Parser &parser) {
   }
   return read_stmt;
 }
-void Read::generate(CodeGenContext &) {}
+void Read::generate(CodeGenContext &context) {
+  {
+    auto exp = variable->generate(context);
+    if (auto binaryExpr = dynamic_cast<BinaryExpression *>(variable.get());
+        binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+      exp = binaryExpr->left->generate(context);
+    }
+
+    context.code << "param " << exp << '\n';
+  }
+  {
+    auto exp = length->generate(context);
+    if (auto binaryExpr = dynamic_cast<BinaryExpression *>(length.get());
+        binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+      exp = binaryExpr->left->generate(context);
+    }
+
+    context.code << "param " << exp << '\n';
+  }
+
+  context.code << "sys_read()\n";
+}
 bool Read::analyze_semantics(Parser &parser) {
   if (!variable->analyze_symantics(parser, location))
     return false;

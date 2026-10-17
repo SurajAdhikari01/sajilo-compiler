@@ -1,5 +1,6 @@
 #import "statements/Exit.hpp"
 #include "Error.hpp"
+#include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
@@ -29,7 +30,15 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
   return exit_stmt;
 }
 
-void Exit::generate(CodeGenContext &) {}
+void Exit::generate(CodeGenContext &context) {
+  auto exp = exit_expr->generate(context);
+  if (auto binaryExpr = dynamic_cast<BinaryExpression *>(exit_expr.get());
+      binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+    exp = binaryExpr->left->generate(context);
+  }
+
+  context.code << "param " << exp << '\n' << "sys_exit()\n";
+}
 bool Exit::analyze_semantics(Parser &parser) {
   if (!exit_expr->analyze_symantics(parser, location))
     return false;

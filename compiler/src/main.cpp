@@ -1,6 +1,7 @@
 #include "lexer.hpp"
 #include "parser.hpp"
 #include <cstdlib>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -9,8 +10,12 @@ int main(int argc, char *argv[]) {
   if (argc < 2) {
     return EXIT_FAILURE;
   }
-  std::string filename(argv[1]);
-  std::ifstream file(filename);
+  std::filesystem::path filePath(argv[1]);
+  if (filePath.extension() != ".sj") {
+    std::cout << "Error: Invalid file extension. Expected a '.sj' file.\n";
+    return EXIT_FAILURE;
+  }
+  std::ifstream file(filePath);
 
   if (!file.is_open()) {
     return EXIT_FAILURE;
@@ -19,7 +24,7 @@ int main(int argc, char *argv[]) {
   buffer << file.rdbuf();
   std::string content = buffer.str();
   Lexer lexer;
-  lexer.set_filename(filename);
+  lexer.set_filename(filePath.filename().string());
   lexer.set_sourceCode(content);
   lexer.tokenize();
 

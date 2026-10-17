@@ -20,7 +20,9 @@ ExpressionStatement::parse_expression_statement(Parser &parser) {
   return expr_statement;
 };
 
-void ExpressionStatement::generate(CodeGenContext &) {};
+void ExpressionStatement::generate(CodeGenContext &context) {
+  expr->generate(context);
+};
 bool ExpressionStatement::analyze_semantics(Parser &parser) {
   return (expr->analyze_symantics(parser, location));
 };

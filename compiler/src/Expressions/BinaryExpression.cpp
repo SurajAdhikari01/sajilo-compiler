@@ -1,5 +1,6 @@
 #include "Expression/BinaryExpression.hpp"
 #include "Error.hpp"
+#include "Expression/PrimaryExpression.hpp"
 #include "parser.hpp"
 #include "utils.hpp"
 #include <memory>
@@ -25,6 +26,14 @@ bool BinaryExpression::analyze_symantics(Parser &parser,
     return false;
   if (!right->analyze_symantics(parser, location))
     return false;
+  // 20 = x;
+  if (bn_operators == BN_OPERATORS::ASSIGN_TO) {
+    auto l = dynamic_cast<PrimaryExpression *>(left.get());
+    if (!l || PRIMITIVE_DATA_TYPES::IDENTIFIER != l->primitive_data_type) {
+      print_error(parser, error::InvalidAssignment, location);
+      return false;
+    }
+  }
 
   auto left_type = left->get_primitive_type();
   auto right_type = right->get_primitive_type();

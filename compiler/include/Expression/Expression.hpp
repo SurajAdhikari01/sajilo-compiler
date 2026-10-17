@@ -1,7 +1,9 @@
 #pragma once
+#include "statements/statements.hpp"
 #include "utils.hpp"
 #include <cstddef>
 #include <memory>
+#include <string_view>
 class Parser;
 class Expression {
 public:
@@ -17,6 +19,7 @@ public:
   virtual bool analyze_symantics(Parser &parser, const SourceLocation &) {
     return true;
   };
+  virtual std::string generate(CodeGenContext &) { return ""; }
 
 private:
 };

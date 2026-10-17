@@ -19,7 +19,11 @@ std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
   return scope_stmt;
 };
 
-void Scope::generate(CodeGenContext &) {};
+void Scope::generate(CodeGenContext &context) {
+  for (const auto &stmt : statements) {
+    stmt->generate(context);
+  }
+};
 
 bool Scope::analyze_semantics(Parser &parser) {
   get_table().enter_scope();

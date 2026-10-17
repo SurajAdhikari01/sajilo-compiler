@@ -1,5 +1,6 @@
 #include "statements/Write.hpp"
 #include "Error.hpp"
+#include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "token.hpp"
@@ -35,7 +36,28 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   return write_stmt;
 }
 
-void Write::generate(CodeGenContext &) {}
+void Write::generate(CodeGenContext &context) {
+  {
+    auto exp = variable->generate(context);
+    if (auto binaryExpr = dynamic_cast<BinaryExpression *>(variable.get());
+        binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+      exp = binaryExpr->left->generate(context);
+    }
+
+    context.code << "param " << exp << '\n';
+  }
+  {
+    auto exp = length->generate(context);
+    if (auto binaryExpr = dynamic_cast<BinaryExpression *>(length.get());
+        binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
+      exp = binaryExpr->left->generate(context);
+    }
+
+    context.code << "param " << exp << '\n';
+  }
+
+  context.code << "sys_write()\n";
+}
 
 bool Write::analyze_semantics(Parser &parser) {
   if (!variable->analyze_symantics(parser, location))

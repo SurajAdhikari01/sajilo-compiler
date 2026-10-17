@@ -7,7 +7,10 @@ class Parser;
 struct CodeGenContext {
   std::stringstream code;
   std::stringstream data;
-  uint32_t lable = 0;
+  uint32_t label = 0;
+  uint32_t temp_label = 0;
+  uint32_t block_label = 0;
+  uint32_t string_label = 0;
 };
 
 class Statements {

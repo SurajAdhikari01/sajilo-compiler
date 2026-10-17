@@ -1,8 +1,10 @@
 #pragma once
+#include "./PrimaryExpression.hpp"
 #import "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "utils.hpp"
 #include <memory>
+#include <string>
 #include <utility>
 enum class BN_OPERATORS {
   NONE,
@@ -28,6 +30,57 @@ enum class BN_OPERATORS {
   INDEXING,
   ARROW
 };
+inline std::string get_symbol(BN_OPERATORS bn_op) {
+  switch (bn_op) {
+  case BN_OPERATORS::NONE:
+    return "";
+  case BN_OPERATORS::ADDITION:
+    return "+";
+  case BN_OPERATORS::SUBTRACTION:
+    return "-";
+  case BN_OPERATORS::MULTIPLICATION:
+    return "*";
+  case BN_OPERATORS::DIVISION:
+    return "/";
+  case BN_OPERATORS::MODULUS:
+    return "%";
+  case BN_OPERATORS::BITWISE_XOR:
+    return "^";
+  case BN_OPERATORS::BITWISE_AND:
+    return "&";
+  case BN_OPERATORS::BITWISE_OR:
+    return "|";
+  case BN_OPERATORS::LESS_THAN:
+    return "<";
+  case BN_OPERATORS::LESS_THAN_EQUAL:
+    return "<=";
+  case BN_OPERATORS::GREATER_THAN:
+    return ">";
+  case BN_OPERATORS::GREATER_THAN_EQUAL:
+    return ">=";
+  case BN_OPERATORS::EQUAL_TO:
+    return "==";
+  case BN_OPERATORS::ASSIGN_TO:
+    return "=";
+  case BN_OPERATORS::NOT_EQUAL_TO:
+    return "!=";
+  case BN_OPERATORS::LOGICAL_AND:
+    return "&&";
+  case BN_OPERATORS::LOGICAL_OR:
+    return "||";
+  case BN_OPERATORS::LEFT_SHIFT:
+    return "<<";
+  case BN_OPERATORS::RIGHT_SHIFT:
+    return ">>";
+  case BN_OPERATORS::INDEXING:
+    return "[]";
+  case BN_OPERATORS::ARROW:
+    return "->";
+  }
+
+  return "";
+}
+
 class BinaryExpression : public Expression {
 public:
   BinaryExpression() {};
@@ -39,8 +92,27 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
   virtual bool analyze_symantics(Parser &parser,
                                  const SourceLocation &) override;
+  virtual std::string generate(CodeGenContext &context) override {
+    auto l = left->generate(context);
+    auto r = right->generate(context);
 
-private:
+    if (bn_operators == BN_OPERATORS::ASSIGN_TO) {
+      auto exp = dynamic_cast<PrimaryExpression *>(left.get());
+      if (exp) {
+        context.code << exp->value << " = " << r << '\n';
+        return std::string(exp->value);
+      }
+      return "";
+    }
+
+    // t0 = left operator right;
+    // int x = 10;
+    // x = 20;
+    context.code << "t" << context.temp_label << " = " << l << " "
+                 << get_symbol(bn_operators) << " " << r << '\n';
+    return "t" + std::to_string(context.temp_label++);
+  };
+
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;
   std::unique_ptr<Expression> left;
   std::unique_ptr<Expression> right;
