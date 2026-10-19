@@ -10,7 +10,7 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
   virtual bool analyze_symantics(Parser &parser,
                                  const SourceLocation &) override;
-  virtual std::string generate(CodeGenContext &) override {
+  virtual std::string generate_ir(CodeGenContext &, Parser &) override {
     return std::string(value);
   }
 

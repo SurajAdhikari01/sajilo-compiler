@@ -3,6 +3,7 @@
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
 #include "statements/Scope.hpp"
+#include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
@@ -39,4 +40,21 @@ bool While::analyze_semantics(Parser &parser) {
   if (!condition->analyze_symantics(parser, location))
     return false;
   return while_block->analyze_semantics(parser);
+}
+
+void While::generate_ir(CodeGenContext &context, Parser &parser) {
+
+  auto cond_level = context.block_label++;
+  auto then_level = context.block_label++;
+  auto end_level = context.block_label++;
+  // context.code << "b" << cond_level << ":\n";
+  auto cond = condition->generate_ir(context, parser);
+  // context.code << "if " << cond << " jmp b" << then_level << "\njmp b"
+  //              << end_level << '\n'
+  //              << "b" << then_level << ":\n";
+
+  while_block->generate_ir(context, parser);
+  // context.code << "jmp b" << cond_level << '\n';
+  //
+  // context.code << 'b' << end_level << ":\n";
 }

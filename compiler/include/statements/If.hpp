@@ -4,14 +4,15 @@
 #include "statements/statements.hpp"
 #include <memory>
 class Parser;
-class If : public Statements {
+class If : public Statements
+{
 
 public:
   virtual ~If() {};
 
   static std::unique_ptr<Statements> parse_if(Parser &parser);
 
-  virtual void generate(CodeGenContext &) override {};
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:

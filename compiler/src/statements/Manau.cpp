@@ -1,12 +1,14 @@
 #include "statements/Manau.hpp"
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/Assign.hpp"
 #include "parser.hpp"
 #include "symbolTable.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
 #include <memory>
+#include <string>
 
 std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
   std::unique_ptr<Manau> manau_stmt = std::make_unique<Manau>();
@@ -47,12 +49,15 @@ std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
 
   return manau_stmt;
 }
-void Manau::generate(CodeGenContext &context) {
+void Manau::generate_ir(CodeGenContext &context, Parser &parser) {
   if (!expr)
     return;
   // name = t0
-  auto exp = expr->generate(context);
-  context.code << name << " = " << exp << '\n';
+  auto exp = expr->generate_ir(context, parser);
+  auto exp_str = std::string(exp);
+  auto instr = std::make_unique<Assign>(std::string(name), exp_str);
+  parser.add_instruction(std::move(instr));
+  // context.code << name << " = " << exp << '\n';
 }
 
 bool Manau::analyze_semantics(Parser &parser) {

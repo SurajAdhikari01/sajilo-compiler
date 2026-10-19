@@ -3,10 +3,10 @@
 #include "Expression/Expression.hpp"
 #include "parser.hpp"
 #include "statements/Scope.hpp"
+#include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
-#include <type_traits>
 
 std::unique_ptr<Statements> If::parse_if(Parser &parser) {
   parser.advance();
@@ -54,4 +54,27 @@ bool If::analyze_semantics(Parser &parser) {
   if (!else_block)
     return if_val;
   return if_val && else_block->analyze_semantics(parser);
+}
+
+void If::generate_ir(CodeGenContext &context, Parser &parser) {
+
+  auto cond = condition->generate_ir(context, parser);
+  auto then_level = context.block_label++;
+  auto else_level = else_block ? context.block_label++ : 0;
+  auto end_level = context.block_label++;
+  auto false_cond = else_block ? else_level : end_level;
+  // context.code << "if " << cond << " jmp b" << then_level << "\n";
+
+  // context.code << "jmp b" << false_cond << '\n'
+  //              << "b" << then_level << ":\n";
+  if_block->generate_ir(context, parser);
+  // context.code << "jmp b" << end_level << '\n';
+
+  if (else_block) {
+    // context.code << "b" << else_level << ":\n";
+    else_block->generate_ir(context, parser);
+
+    // context.code << "jmp b" << end_level << '\n';
+  }
+  // context.code << 'b' << end_level << ":\n";
 }

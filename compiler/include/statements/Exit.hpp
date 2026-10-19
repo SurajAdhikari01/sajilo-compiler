@@ -8,10 +8,11 @@ class Parser;
 class Exit : public Statements {
 public:
   static std::unique_ptr<Statements> parse_exit(Parser &parser);
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
 
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:
   std::unique_ptr<Expression> exit_expr;
+  SourceLocation location;
 };

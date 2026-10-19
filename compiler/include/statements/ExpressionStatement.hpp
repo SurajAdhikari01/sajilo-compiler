@@ -5,10 +5,11 @@
 #include "statements/statements.hpp"
 #include <cstddef>
 #include <memory>
-class ExpressionStatement : public Statements {
+class ExpressionStatement : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_expression_statement(Parser &parser);
-  void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:

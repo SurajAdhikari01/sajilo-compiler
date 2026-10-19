@@ -30,14 +30,15 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
   return exit_stmt;
 }
 
-void Exit::generate(CodeGenContext &context) {
-  auto exp = exit_expr->generate(context);
+void Exit::generate_ir(CodeGenContext &context, Parser &parser) {
+  auto exp = exit_expr->generate_ir(context, parser);
   if (auto binaryExpr = dynamic_cast<BinaryExpression *>(exit_expr.get());
       binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-    exp = binaryExpr->left->generate(context);
+    exp = binaryExpr->left->generate_ir(context, parser);
   }
 
-  context.code << "param " << exp << '\n' << "sys_exit()\n";
+  // context.code << "param " << exp << '\n'
+  //              << "sys_exit()\n";
 }
 bool Exit::analyze_semantics(Parser &parser) {
   if (!exit_expr->analyze_symantics(parser, location))

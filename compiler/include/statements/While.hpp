@@ -3,12 +3,13 @@
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include <memory>
-class While : public Statements {
+class While : public Statements
+{
 public:
   virtual ~While() {};
   static std::unique_ptr<Statements> parse_while(Parser &parser);
 
-  virtual void generate(CodeGenContext &) override {};
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:

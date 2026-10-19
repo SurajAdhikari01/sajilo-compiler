@@ -6,12 +6,15 @@
 #include <cstddef>
 #include <memory>
 #include <utility>
-std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
+std::unique_ptr<Statements> Scope::parse_scope(Parser &parser)
+{
   auto scope_stmt = std::make_unique<Scope>();
   parser.advance();
-  while (!parser.match(TokenType::RIGHT_BRACE)) {
+  while (!parser.match(TokenType::RIGHT_BRACE))
+  {
     auto stmt = parser.parse_statement();
-    if (!stmt) {
+    if (!stmt)
+    {
       return nullptr;
     }
     scope_stmt->statements.emplace_back(std::move(stmt));
@@ -19,16 +22,22 @@ std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
   return scope_stmt;
 };
 
-void Scope::generate(CodeGenContext &context) {
-  for (const auto &stmt : statements) {
-    stmt->generate(context);
+void Scope::generate_ir(CodeGenContext &context, Parser &parser)
+{
+  for (const auto &stmt : statements)
+  {
+    stmt->generate_ir(context, parser);
   }
 };
 
-bool Scope::analyze_semantics(Parser &parser) {
+bool Scope::analyze_semantics(Parser &parser)
+{
   get_table().enter_scope();
-  for (const auto &ptr : statements) {
-    if (!ptr->analyze_semantics(parser)) {
+
+  for (const auto &ptr : statements)
+  {
+    if (!ptr->analyze_semantics(parser))
+    {
       return false;
     }
   }

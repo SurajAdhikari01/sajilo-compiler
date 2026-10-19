@@ -4,10 +4,11 @@
 #include "statements/statements.hpp"
 #include <memory>
 #include <vector>
-class Scope : public Statements {
+class Scope : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_scope(Parser &parser);
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
 
   virtual bool analyze_semantics(Parser &parser) override;
 

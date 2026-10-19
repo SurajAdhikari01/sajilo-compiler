@@ -5,11 +5,12 @@
 #include <memory>
 class Parser;
 class Expression;
-class Write : public Statements {
+class Write : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_write(Parser &parser);
 
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:

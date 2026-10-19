@@ -1,4 +1,5 @@
 #pragma once
+#include "IR/IR.hpp"
 #include "lexer.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
@@ -95,6 +96,13 @@ public:
     }
     return false;
   }
+  bool add_instruction(std::unique_ptr<IR> instr) {
+    if (instr) {
+      instructions.push_back(std::move(instr));
+      return true;
+    }
+    return false;
+  }
   size_t get_current_position() { return index; }
   Token get_token(size_t i) { return is_valid(i) ? tokens[i] : EOT; }
   void set_lexer(Lexer &lexer);
@@ -104,6 +112,7 @@ private:
   std::vector<Token> tokens;
   size_t index{};
   std::vector<std::unique_ptr<Statements>> statements;
+  std::vector<std::unique_ptr<IR>> instructions;
   Token EOT = {TokenType::NONE};
   Lexer *lexer = nullptr;
 };

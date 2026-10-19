@@ -5,10 +5,11 @@
 #include <memory>
 #include <string_view>
 class Parser;
-class Function : public Statements {
+class Function : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_function(Parser &parser);
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:

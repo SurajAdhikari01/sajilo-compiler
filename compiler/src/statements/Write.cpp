@@ -36,27 +36,27 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   return write_stmt;
 }
 
-void Write::generate(CodeGenContext &context) {
+void Write::generate_ir(CodeGenContext &context, Parser &parser) {
   {
-    auto exp = variable->generate(context);
+    auto exp = variable->generate_ir(context, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(variable.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate(context);
+      exp = binaryExpr->left->generate_ir(context, parser);
     }
 
-    context.code << "param " << exp << '\n';
+    // context.code << "param " << exp << '\n';
   }
   {
-    auto exp = length->generate(context);
+    auto exp = length->generate_ir(context, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(length.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate(context);
+      exp = binaryExpr->left->generate_ir(context, parser);
     }
 
-    context.code << "param " << exp << '\n';
+    // context.code << "param " << exp << '\n';
   }
 
-  context.code << "sys_write()\n";
+  // context.code << "sys_write()\n";
 }
 
 bool Write::analyze_semantics(Parser &parser) {

@@ -92,26 +92,8 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
   virtual bool analyze_symantics(Parser &parser,
                                  const SourceLocation &) override;
-  virtual std::string generate(CodeGenContext &context) override {
-    auto l = left->generate(context);
-    auto r = right->generate(context);
-
-    if (bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      auto exp = dynamic_cast<PrimaryExpression *>(left.get());
-      if (exp) {
-        context.code << exp->value << " = " << r << '\n';
-        return std::string(exp->value);
-      }
-      return "";
-    }
-
-    // t0 = left operator right;
-    // int x = 10;
-    // x = 20;
-    context.code << "t" << context.temp_label << " = " << l << " "
-                 << get_symbol(bn_operators) << " " << r << '\n';
-    return "t" + std::to_string(context.temp_label++);
-  };
+  virtual std::string generate_ir(CodeGenContext &context,
+                                  Parser &parser) override;
 
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;
   std::unique_ptr<Expression> left;

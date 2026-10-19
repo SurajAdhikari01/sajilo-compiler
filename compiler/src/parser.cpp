@@ -32,7 +32,10 @@ void Parser::parse() {
   }
   CodeGenContext context;
   for (const auto &ptr : statements) {
-    ptr->generate(context);
+    ptr->generate_ir(context, *this);
+  }
+  for (const auto &instr : instructions) {
+    instr->generate_ir(context, *this);
   }
 
   std::stringstream ss;

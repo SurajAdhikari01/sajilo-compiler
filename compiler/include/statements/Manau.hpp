@@ -7,10 +7,11 @@
 #include <memory>
 #include <string_view>
 
-class Manau : public Statements {
+class Manau : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_manau(Parser &parser);
-  virtual void generate(CodeGenContext &) override;
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
   virtual bool analyze_semantics(Parser &parser) override;
 
 private:
