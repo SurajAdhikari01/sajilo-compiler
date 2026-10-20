@@ -4,10 +4,9 @@
 #include <memory>
 class Expression;
 class Parser;
-class Return : public Statements
-{
+class ReturnStatement : public Statements {
 public:
-  Return() {}
+  ReturnStatement() {}
   static std::unique_ptr<Statements> parse_return(Parser &parser);
   virtual void generate_ir(CodeGenContext &, Parser &) override;
 

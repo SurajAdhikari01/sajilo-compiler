@@ -7,8 +7,6 @@
 #include <string>
 class Binary : public IR {
 public:
-  Binary() {}
-  virtual ~Binary() {}
   Binary(BN_OPERATORS bn_operator, const std::string &oprand_left,
          const std::string &oprand_right, const std::string &res)
       : bn_operator(bn_operator), oprand_left(oprand_left),

@@ -2,12 +2,16 @@
 
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/CondJump.hpp"
+#include "IR/Instruction.hpp"
+#include "IR/Jump.hpp"
 #include "statements/Scope.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
 #include <ostream>
+#include <string>
 
 std::unique_ptr<Statements> While::parse_while(Parser &parser) {
   parser.advance();
@@ -47,13 +51,24 @@ void While::generate_ir(CodeGenContext &context, Parser &parser) {
   auto cond_level = context.block_label++;
   auto then_level = context.block_label++;
   auto end_level = context.block_label++;
-  // context.code << "b" << cond_level << ":\n";
   auto cond = condition->generate_ir(context, parser);
+
+  auto temp_str = 'b' + std::to_string(end_level);
+  parser.add_instruction(std::make_unique<CondJump>(cond, temp_str));
+  temp_str = 'b' + std::to_string(then_level);
+  parser.add_instruction(std::make_unique<Label>(temp_str));
+
+  // context.code << "b" << cond_level << ":\n";
   // context.code << "if " << cond << " jmp b" << then_level << "\njmp b"
   //              << end_level << '\n'
   //              << "b" << then_level << ":\n";
 
   while_block->generate_ir(context, parser);
+  temp_str = 'b' + std::to_string(cond_level);
+  parser.add_instruction(std::make_unique<Jump>(temp_str));
+
+  temp_str = 'b' + std::to_string(end_level);
+  parser.add_instruction(std::make_unique<Label>(temp_str));
   // context.code << "jmp b" << cond_level << '\n';
   //
   // context.code << 'b' << end_level << ":\n";

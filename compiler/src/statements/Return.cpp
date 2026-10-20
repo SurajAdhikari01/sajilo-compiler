@@ -2,16 +2,17 @@
 #include "Error.hpp"
 #include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/Instruction.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
 
-std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
+std::unique_ptr<Statements> ReturnStatement::parse_return(Parser &parser) {
   parser.advance();
 
-  auto return_stmt = std::make_unique<Return>();
+  auto return_stmt = std::make_unique<ReturnStatement>();
   return_stmt->location.line = parser.current_token().line_number;
   if (!parser.expect(TokenType::LEFT_PAREN, error::ExpectedLeftParen)) {
     return nullptr;
@@ -31,7 +32,7 @@ std::unique_ptr<Statements> Return::parse_return(Parser &parser) {
   return return_stmt;
 }
 
-void Return::generate_ir(CodeGenContext &context, Parser &parser) {
+void ReturnStatement::generate_ir(CodeGenContext &context, Parser &parser) {
 
   auto exp = return_expr->generate_ir(context, parser);
   if (auto binaryExpr = dynamic_cast<BinaryExpression *>(return_expr.get());
@@ -41,8 +42,11 @@ void Return::generate_ir(CodeGenContext &context, Parser &parser) {
 
   // context.code << "param " << exp << '\n'
   //              << "return()\n";
+  //
+  parser.add_instruction(std::make_unique<Param>(exp));
+  parser.add_instruction(std::make_unique<Return>());
 };
-bool Return::analyze_semantics(Parser &parser) {
+bool ReturnStatement::analyze_semantics(Parser &parser) {
   if (!return_expr->analyze_symantics(parser, location))
     return false;
   auto type = return_expr->get_primitive_type();

@@ -2,10 +2,12 @@
 #include "Error.hpp"
 #include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/Instruction.hpp"
 #include "parser.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
+
 std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   auto write_stmt = std::make_unique<Write>();
 
@@ -44,7 +46,7 @@ void Write::generate_ir(CodeGenContext &context, Parser &parser) {
       exp = binaryExpr->left->generate_ir(context, parser);
     }
 
-    // context.code << "param " << exp << '\n';
+    parser.add_instruction(std::make_unique<Param>(exp));
   }
   {
     auto exp = length->generate_ir(context, parser);
@@ -53,10 +55,10 @@ void Write::generate_ir(CodeGenContext &context, Parser &parser) {
       exp = binaryExpr->left->generate_ir(context, parser);
     }
 
-    // context.code << "param " << exp << '\n';
+    parser.add_instruction(std::make_unique<Param>(exp));
   }
 
-  // context.code << "sys_write()\n";
+  parser.add_instruction(std::make_unique<FunctionCall>("__sys_write()"));
 }
 
 bool Write::analyze_semantics(Parser &parser) {

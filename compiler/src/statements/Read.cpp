@@ -2,10 +2,13 @@
 #include "Error.hpp"
 #include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/FunctionCall.hpp"
 #include "parser.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
+
+#include "IR/Instruction.hpp"
 #include <memory>
 std::unique_ptr<Statements> Read::parse_read(Parser &parser) {
   auto read_stmt = std::make_unique<Read>();
@@ -42,6 +45,7 @@ void Read::generate_ir(CodeGenContext &context, Parser &parser) {
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
       exp = binaryExpr->left->generate_ir(context, parser);
     }
+    parser.add_instruction(std::make_unique<Param>(exp));
 
     // context.code << "param " << exp << '\n';
   }
@@ -52,8 +56,11 @@ void Read::generate_ir(CodeGenContext &context, Parser &parser) {
       exp = binaryExpr->left->generate_ir(context, parser);
     }
 
+    parser.add_instruction(std::make_unique<Param>(exp));
+
     // context.code << "param " << exp << '\n';
   }
+  parser.add_instruction(std::make_unique<FunctionCall>("__sys_read()"));
 
   // context.code << "sys_read()\n";
 }

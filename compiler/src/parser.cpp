@@ -57,7 +57,7 @@ std::unique_ptr<Statements> Parser::parse_statement() {
   case TokenType::JABASAMMA:
     return While::parse_while(*this);
   case TokenType::LAIJAU: {
-    return Return::parse_return(*this);
+    return ReturnStatement::parse_return(*this);
   }
   case TokenType::EXIT: {
     return Exit::parse_exit(*this);

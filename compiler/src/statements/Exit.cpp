@@ -2,13 +2,14 @@
 #include "Error.hpp"
 #include "Expression/BinaryExpression.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/FunctionCall.hpp"
+#include "IR/Instruction.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include "utils.hpp"
 #include <cstddef>
 #include <memory>
-
 std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
   parser.advance();
   auto exit_stmt = std::make_unique<Exit>();
@@ -36,6 +37,8 @@ void Exit::generate_ir(CodeGenContext &context, Parser &parser) {
       binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
     exp = binaryExpr->left->generate_ir(context, parser);
   }
+  parser.add_instruction(std::make_unique<Param>(exp));
+  parser.add_instruction(std::make_unique<FunctionCall>("sys_exit"));
 
   // context.code << "param " << exp << '\n'
   //              << "sys_exit()\n";

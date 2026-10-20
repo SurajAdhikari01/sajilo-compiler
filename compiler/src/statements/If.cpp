@@ -1,12 +1,16 @@
 #include "statements/If.hpp"
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
+#include "IR/Instruction.hpp"
+#include "IR/Jump.hpp"
+#include "IR/Label.hpp"
 #include "parser.hpp"
 #include "statements/Scope.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
 #include <cstddef>
 #include <memory>
+#include <string>
 
 std::unique_ptr<Statements> If::parse_if(Parser &parser) {
   parser.advance();
@@ -63,18 +67,27 @@ void If::generate_ir(CodeGenContext &context, Parser &parser) {
   auto else_level = else_block ? context.block_label++ : 0;
   auto end_level = context.block_label++;
   auto false_cond = else_block ? else_level : end_level;
-  // context.code << "if " << cond << " jmp b" << then_level << "\n";
 
-  // context.code << "jmp b" << false_cond << '\n'
-  //              << "b" << then_level << ":\n";
+  auto temp_str = 'b' + std::to_string(false_cond);
+  parser.add_instruction(std::make_unique<CondJump>(cond, temp_str));
+  temp_str = 'b' + std::to_string(then_level);
+  parser.add_instruction(std::make_unique<Label>(temp_str));
+
   if_block->generate_ir(context, parser);
   // context.code << "jmp b" << end_level << '\n';
+  temp_str = 'b' + std::to_string(end_level);
+  parser.add_instruction(std::make_unique<Jump>(temp_str));
 
   if (else_block) {
-    // context.code << "b" << else_level << ":\n";
-    else_block->generate_ir(context, parser);
+    temp_str = 'b' + std::to_string(else_level);
+    parser.add_instruction(std::make_unique<Label>(temp_str));
 
-    // context.code << "jmp b" << end_level << '\n';
+    else_block->generate_ir(context, parser);
+    temp_str = 'b' + std::to_string(end_level);
+    parser.add_instruction(std::make_unique<Jump>(temp_str));
   }
+  temp_str = 'b' + std::to_string(end_level);
+  parser.add_instruction(std::make_unique<Label>(temp_str));
+
   // context.code << 'b' << end_level << ":\n";
 }
