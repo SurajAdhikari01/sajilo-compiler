@@ -268,12 +268,14 @@ sajilo-compiler/
 │   │   ├── IR/               # Intermediate Representation (TAC instructions)
 │   │   │   ├── Assign.hpp    # Assignment instructions (dest = src)
 │   │   │   ├── Binary.hpp    # Binary operation instructions (t0 = a + b)
-│   │   │   ├── CondJump.hpp  # Conditional branch instructions (planned)
-│   │   │   ├── FunctionCall.hpp # Function & syscall invocations (planned)
+│   │   │   ├── CondJump.hpp  # Conditional branch instructions (if false <cond> jmp <label>)
+│   │   │   ├── FunctionCall.hpp # Function & syscall invocations (call <func>)
+│   │   │   ├── Instruction.hpp # Master header including all IR instructions
 │   │   │   ├── IR.hpp        # Base IR instruction interface
-│   │   │   ├── Jump.hpp      # Unconditional jump instructions (planned)
-│   │   │   ├── Label.hpp     # Basic block jump labels (planned)
-│   │   │   └── Param.hpp     # Parameter passing instructions (planned)
+│   │   │   ├── Jump.hpp      # Unconditional jump instructions (jmp <label>)
+│   │   │   ├── Label.hpp     # Basic block jump labels (<label>:)
+│   │   │   ├── Param.hpp     # Parameter passing instructions (param <arg>)
+│   │   │   └── Return.hpp    # Function return instructions (return)
 │   │   ├── lexer.hpp         # Lexer and tokenizer
 │   │   ├── parser.hpp        # Parser state machine & IR instruction manager
 │   │   ├── statements/       # Function, If, While, Manau, Return, etc.
@@ -285,7 +287,12 @@ sajilo-compiler/
 │       ├── IR/               # IR instruction generation implementations
 │       │   ├── Assign.cpp    # Linear assignment lowering
 │       │   ├── Binary.cpp    # Binary TAC instruction lowering
-│       │   └── IR.cpp        # IR base implementation
+│       │   ├── CondJump.cpp  # Conditional jump lowering
+│       │   ├── FunctionCall.cpp # Syscall / function call lowering
+│       │   ├── Jump.cpp      # Unconditional jump lowering
+│       │   ├── Label.cpp     # Basic block label emission
+│       │   ├── Param.cpp     # Parameter instruction lowering
+│       │   └── Return.cpp    # Return instruction lowering
 │       ├── statements/       # Statement parsers, semantic analysis & IR dispatch
 │       ├── lexer.cpp         # Tokenizer implementation
 │       ├── parser.cpp        # Statement dispatch & IR emission loop
@@ -299,55 +306,83 @@ sajilo-compiler/
 
 ## Intermediate Representation (IR)
 
-Sajilo features a decoupled **Three-Address Code (TAC)** Intermediate Representation. Rather than translating high-level AST constructs directly into machine code, the compiler lowers statements and expressions into a linear sequence of simplified 3-address instructions. This isolates frontend language syntax from backend machine architectures and forms the basis for future optimization passes.
+Sajilo features a decoupled **Three-Address Code (TAC)** Intermediate Representation. Rather than translating high-level AST constructs directly into machine code, the compiler lowers statements and expressions into a linear sequence of simplified 3-address instructions. This isolates frontend language syntax from backend machine architectures and forms the basis for future optimization passes and assembly generation.
 
 ### Architecture
 
 - **`IR` Base Class**: Abstract base class (`compiler/include/IR/IR.hpp`) defining `virtual void generate_ir(CodeGenContext &, Parser &) = 0;`.
+- **Master Header**: `compiler/include/IR/Instruction.hpp` aggregates all available IR instructions.
 - **Instruction Collector**: `Parser` manages an instruction stream (`std::vector<std::unique_ptr<IR>> instructions;`) populated during AST lowering.
-- **Virtual Temporaries**: A monotonic label counter in `CodeGenContext` allocates virtual registers (`t0`, `t1`, `t2`, ...) for intermediate expression results.
+- **Virtual Temporaries & Labels**: A monotonic counter in `CodeGenContext` allocates virtual registers (`t0`, `t1`, `t2`, ...) for intermediate expression results and block labels (`b0`, `b1`, `b2`, ...) for control flow.
 - **Output Target**: When parsing and semantic analysis succeed, the IR instructions are serialized and emitted to **`out.ir`**.
 
 ### Implementation Status
 
-The IR layer is actively being implemented as a dedicated subsystem:
+The core IR instruction set and AST lowering pipeline are fully functional:
 
-| IR Component | Subsystem / Instruction | Status | Details |
+| IR Instruction / Subsystem | Representation / Format | Status | Details |
 | :--- | :--- | :---: | :--- |
 | **Linear Assignment** | `Assign` (`dest = src`) | **Implemented** | Handles variable assignments, `manau` initialized declarations, and chained assignments (`a = b = 50;`). |
-| **Binary Operations** | `Binary` (`tN = a op b`) | **Implemented** | Arithmetic (`+`, `-`, `*`, `/`) and comparison operators (`<`, `<=`, `>`, `>=`, `==`, `!=`) evaluated with temporary registers. |
-| **Temporary Generation** | `CodeGenContext::temp_label` | **Implemented** | Auto-increments temporary variable names (`t0`, `t1`, ...). |
-| **AST Lowering Visitor** | `generate_ir` across AST | **Implemented** | Traverses `Function`, `Scope`, `Manau`, `ExpressionStatement`, and Pratt binary expressions. |
-| **IR Serialization** | `Parser::parse()` | **Implemented** | Emits the complete instruction stream into `out.ir`. |
-| **Control-Flow Jumps** | `Jump`, `CondJump`, `Label` | *In Progress* | Header scaffolds and statement traversal exist for `jaba` (if-else) and `jabasamma` (while loops); branch jump emission is being wired up. |
-| **Call & Syscall Params** | `Param`, `FunctionCall` | *In Progress* | Scaffolding in place for function calls and runtime built-ins (`exit`, `read`, `write`, `laijau`). |
+| **Binary Operations** | `Binary` (`tN = a op b`) | **Implemented** | Arithmetic (`+`, `-`, `*`, `/`) and comparisons (`<`, `<=`, `>`, `>=`, `==`, `!=`) evaluated into temporary registers. |
+| **Conditional Jump** | `CondJump` (`if false <cond> jmp <label>`) | **Implemented** | Generates conditional branches for `jaba` (if) conditions and `jabasamma` (while) loops. |
+| **Unconditional Jump** | `Jump` (`jmp <label>`) | **Implemented** | Emits jumps to end blocks for if-else branches and loop backward jumps. |
+| **Basic Block Label** | `Label` (`<label>:`) | **Implemented** | Emits jump targets (`b0:`, `b1:`, ...) for branching and loop structures. |
+| **Parameter Passing** | `Param` (`param <arg>`) | **Implemented** | Pushes arguments for function returns and built-in system calls (`read`, `write`, `exit`, `laijau`). |
+| **Function Call** | `FunctionCall` (`call <func>`) | **Implemented** | Emits invocations for runtime syscalls (`__sys_read()`, `__sys_write()`, `sys_exit`). |
+| **Function Return** | `Return` (`return`) | **Implemented** | Emits `return` for function return statements (`ReturnStatement`). |
+| **Temporary & Label Counters** | `CodeGenContext` | **Implemented** | Auto-increments temporary variables (`t0`, `t1`, ...) and block labels (`b0`, `b1`, ...). |
+| **AST Lowering Visitor** | `generate_ir` across AST | **Implemented** | Traverses `Function`, `Scope`, `Manau`, `If`, `While`, `Exit`, `Read`, `Write`, `ReturnStatement`, and Pratt binary expressions. |
+| **IR Serialization** | `Parser::parse()` | **Implemented** | Linearizes and writes the complete instruction stream into `out.ir`. |
 | **Unary Expressions** | Unary TAC Lowering | *In Progress* | Increment (`++`), decrement (`--`), and negation (`-`) TAC generation. |
+| **User Function Calls** | Function Call Expressions | *In Progress* | Invoking user-defined functions in expressions and capturing return values (`tN = call foo()`). |
+| **Static Data Pool** | String / Constant Data | *Planned* | Lowering string literals to `.data` section or string pool. |
+| **IR Optimizations** | Optimization Passes | *Planned* | Control Flow Graph (CFG) analysis, constant folding, and dead code elimination. |
 
 ### Example IR Output
 
-Given the following Sajilo code:
+Given the following Sajilo code (`language/test.sj`):
 
 ```sajilo
-func main(int arg1, int arg2) -> deu(int) {
-    manau int a = 10;
-    manau int b = 20;
-    manau:const int MAX_LIMIT = 100;
+func main(int var, int hell) -> deu(int) {
+    manau int test = 10;
+    manau int a = 1;
+    manau int b = 2;
 
-    jabasamma (a < MAX_LIMIT) {
-        a = a + 1;
+    jaba (a + b) {
+        a + b;
+        laijau(test);
+    } natra {
+        # optional else branch
     }
+
+    manau string buffer = "suraj";
+    read(buffer, test);
+    exit(test);
 }
 ```
 
 The compiler lowers the statements into `out.ir`:
 
 ```text
-a = 10
-b = 20
-MAX_LIMIT = 100
-t0 = a < MAX_LIMIT
-t1 = a + 1
-a = t1
+test = 10
+a = 1
+b = 2
+t0 = a + b
+if false t0 jmp b1
+b0:
+t1 = a + b
+param test
+return
+jmp b2
+b1:
+jmp b2
+b2:
+buffer = suraj
+param buffer
+param test
+call __sys_read()
+param test
+call sys_exit
 ```
 
 ---
@@ -382,24 +417,26 @@ The compiler currently runs the following pipeline:
 1. **Lexical Analysis (Tokenizer)**: Converts `.sj` source code into a clean token stream.
 2. **Pratt Parsing**: Builds a structured Abstract Syntax Tree (AST) handling precedence and associativity.
 3. **Semantic Analysis**: Validates symbols against scoped symbol tables, verifies type compatibility, and emits compiler errors with source locations.
-4. **Intermediate Representation (IR) Emission**: Lowers AST nodes into Three-Address Code (TAC), allocates virtual temporary registers, and emits the linear instruction stream to `out.ir`.
+4. **Intermediate Representation (IR) Emission**: Lowers AST nodes into Three-Address Code (TAC), allocates virtual temporary registers and labels, and emits the linear instruction stream to `out.ir`.
 
 ---
 
 ## Roadmap / Future Work (TODO)
 
-The frontend parsing, semantic analysis, and the initial Intermediate Representation (IR) pipeline are currently in place. The next phases of development focus on completing the IR subsystem and the x86_64 code generator:
+Frontend parsing, semantic analysis, and the foundational Intermediate Representation (IR) pipeline are implemented. The next phases of development focus on expanding the IR and building the x86_64 code generator:
 
 - [ ] **Intermediate Representation (IR)**: Complete the Three-Address Code (TAC) pipeline
-  - [x] Decoupled IR architecture (`IR` base class and instruction buffer in `Parser`)
+  - [x] Decoupled IR architecture (`IR` base class, `Instruction.hpp`, instruction buffer in `Parser`)
   - [x] Assignment instructions (`Assign`) for variable definitions, initializations, and reassignments
   - [x] Binary operations (`Binary`) with virtual temporary register allocation (`t0`, `t1`, ...)
-  - [x] Recursive AST traversal across statements, scopes, and expressions
+  - [x] Conditional branch and jump instructions (`CondJump`, `Jump`, `Label`) for `jaba`/`natra` and `jabasamma`
+  - [x] Parameter passing and function/syscall call instructions (`Param`, `FunctionCall`, `Return`) for built-ins (`read`, `write`, `exit`, `laijau`)
+  - [x] Recursive AST traversal across statements, scopes, conditionals, loops, and expressions
   - [x] Linear IR serialization to `out.ir`
-  - [ ] Jump and conditional branch instructions (`Jump`, `CondJump`, `Label`) for `jaba` and `jabasamma`
-  - [ ] Parameter passing and call instructions (`Param`, `FunctionCall`) for syscalls (`read`, `write`, `exit`, `laijau`) and user functions
-  - [ ] Unary expression IR lowering
-  - [ ] Basic block structuring and IR optimization passes (constant folding, dead code elimination)
+  - [ ] User-defined function invocation in expressions with argument passing and return value capture
+  - [ ] Unary expression IR lowering (`++`, `--`, `-`, `!`, `~`)
+  - [ ] String literal storage and data section IR handling
+  - [ ] Basic block structuring, CFG construction, and IR optimization passes (constant folding, dead code elimination)
 - [ ] **Assembly Code Generation**: Backend x86_64 code generator lowering IR / AST:
   - Function prologue, epilogue, and stack frame management
   - Register allocation from virtual temporaries
