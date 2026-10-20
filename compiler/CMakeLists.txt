@@ -10,6 +10,8 @@ file(GLOB_RECURSE app_src "${CMAKE_SOURCE_DIR}/src/*.cpp")
 add_executable(sajilo ${app_src})
 
 target_include_directories(sajilo PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(sajilo PRIVATE ${CMAKE_SOURCE_DIR}/external)
+
 install(TARGETS sajilo DESTINATION /usr/local/bin/)
 
 

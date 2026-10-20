@@ -1,0 +1,5 @@
+{
+    "error": "test.sj:7: \"Expected: ';'\"\n     manau int b=2;\n",
+    "output": "",
+    "status": false
+}

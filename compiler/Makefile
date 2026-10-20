@@ -14,4 +14,4 @@ install:
 
 
 test:
-	@cd ../language && sajilo test.sj
+	@cd ../language && sajilo test.sj -o json test.json

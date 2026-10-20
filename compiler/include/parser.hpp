@@ -7,9 +7,12 @@
 #include <cstddef>
 #include <initializer_list>
 #include <memory>
+#include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
+
+enum class OUTPUT_FORMAT { json, text, none };
 class Parser {
 public:
   const Token &peek_token(int offset = 1) {
@@ -108,7 +111,21 @@ public:
   void set_lexer(Lexer &lexer);
   const Lexer &get_lexer() const;
 
+  void set_output_data(OUTPUT_FORMAT output_format,
+                       const std::string output_file) {
+    this->output_format = output_format;
+    this->output_file = output_file;
+  }
+
+  void append_error_message(const std::string &err_msg) {
+    this->err_msg += err_msg;
+  }
+
 private:
+  std::string output_file;
+  bool isInvalidSyntax = false;
+  OUTPUT_FORMAT output_format;
+  std::string err_msg;
   std::vector<Token> tokens;
   size_t index{};
   std::vector<std::unique_ptr<Statements>> statements;

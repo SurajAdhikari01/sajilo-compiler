@@ -1,0 +1,33 @@
+test = 10
+a = 1
+b = 2
+t0 = a + b
+if false t0 jmp b1
+b0:
+t1 = a + b
+param test
+return
+t2 = a + b
+if false t2 jmp b4
+b3:
+t3 = a + b
+param test
+return
+jmp b5
+b4:
+jmp b5
+b5:
+jmp b2
+b1:
+jmp b2
+b2:
+t4 = a + b
+param test
+return
+number = 10
+buffer = suraj
+param buffer
+param number
+call __sys_read()
+param number
+call sys_exit
