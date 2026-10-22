@@ -4,6 +4,8 @@
 
 Sajilo source files use the **`.sj`** extension.
 
+<img width="1680" height="969" alt="image" src="https://github.com/user-attachments/assets/1add3453-42db-477a-bdaf-96266cea78bf" />
+
 ---
 
 ## Keyword Dictionary
