@@ -6,12 +6,10 @@
 #include "utils.hpp"
 #include <cstddef>
 #include <initializer_list>
-#include <memory>
 #include <string>
 #include <string_view>
 #include <utility>
 #include <vector>
-
 enum class OUTPUT_FORMAT { json, text, none };
 class Parser {
 public:
@@ -91,21 +89,8 @@ public:
   }
   std::unique_ptr<Statements> parse_statement();
   void parse();
-  bool add_statement(std::unique_ptr<Statements> statement) {
-
-    if (statement) {
-      statements.push_back(std::move(statement));
-      return true;
-    }
-    return false;
-  }
-  bool add_instruction(std::unique_ptr<IR> instr) {
-    if (instr) {
-      instructions.push_back(std::move(instr));
-      return true;
-    }
-    return false;
-  }
+  bool add_statement(std::unique_ptr<Statements> statement);
+  bool add_instruction(std::unique_ptr<IR> instr);
   size_t get_current_position() { return index; }
   Token get_token(size_t i) { return is_valid(i) ? tokens[i] : EOT; }
   void set_lexer(Lexer &lexer);

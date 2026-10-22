@@ -43,8 +43,7 @@ void ReturnStatement::generate_ir(CodeGenContext &context, Parser &parser) {
   // context.code << "param " << exp << '\n'
   //              << "return()\n";
   //
-  parser.add_instruction(std::make_unique<Param>(exp));
-  parser.add_instruction(std::make_unique<Return>());
+  parser.add_instruction(std::make_unique<Return>(exp));
 };
 bool ReturnStatement::analyze_semantics(Parser &parser) {
   if (!return_expr->analyze_symantics(parser, location))

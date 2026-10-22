@@ -22,6 +22,7 @@ std::unique_ptr<Expression> PrimaryExpression::parse_primary(Parser &parser) {
   } else if (tempToken == TokenType::STRING_LITERAL) {
     primary_expr->primitive_data_type = PRIMITIVE_DATA_TYPES::STRING;
     primary_expr->value = parser.current_token().value;
+    primary_expr->str_index = store_string_literal(primary_expr->value);
   } else if (tempToken == TokenType::IDENTIFIER) {
     primary_expr->primitive_data_type = PRIMITIVE_DATA_TYPES::IDENTIFIER;
     primary_expr->value = parser.current_token().value;

@@ -1,6 +1,9 @@
 #pragma once
 #include "Expression/Expression.hpp"
+#include "utils.hpp"
+#include <cstddef>
 #include <memory>
+#include <string>
 #include <string_view>
 class Parser;
 
@@ -11,9 +14,14 @@ public:
   virtual bool analyze_symantics(Parser &parser,
                                  const SourceLocation &) override;
   virtual std::string generate_ir(CodeGenContext &, Parser &) override {
+    if (primitive_data_type == PRIMITIVE_DATA_TYPES::STRING) {
+      return "str" + std::to_string(str_index);
+    }
     return std::string(value);
   }
 
   PRIMITIVE_DATA_TYPES primitive_data_type = PRIMITIVE_DATA_TYPES::VOID;
   std::string_view value;
+
+  size_t str_index{};
 };

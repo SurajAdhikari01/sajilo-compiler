@@ -1,9 +1,14 @@
 #pragma once
 
+#include "IR/DataItem.hpp"
+#include <cstddef>
 #include <cstdint>
+#include <format>
 #include <string>
 #include <string_view>
-
+#include <utility>
+#include <vector>
+struct CodeGenContext;
 enum class PRIMITIVE_DATA_TYPES {
   INT,
   CHAR,
@@ -99,3 +104,25 @@ class Parser;
 void print_error(Parser &parser, std::string_view error_msg);
 void print_error(Parser &parser, std::string_view error_msg,
                  const SourceLocation &);
+
+inline std::string
+generate_function_label(std::string_view name,
+                        std::vector<ParameterDecl> parameters) {
+  std::string parameters_str;
+  for (size_t i = 0; i < parameters.size(); i++) {
+    parameters_str += parameters[i].type.name;
+    if (i < (parameters.size() - 1)) {
+      parameters_str += ',';
+    }
+  }
+
+  return std::format("{}({})", name, parameters_str);
+}
+
+inline std::vector<std::string_view> str_datas;
+inline size_t store_string_literal(std::string_view str_data) {
+  str_datas.push_back(str_data);
+  return str_datas.size() - 1;
+}
+
+void add_string_literal_instruction(CodeGenContext &context, Parser &parser);

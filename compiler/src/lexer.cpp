@@ -18,7 +18,9 @@ static bool isKeyword(const std::string_view value, Token &token) {
       {"jabasamma", {TokenType::JABASAMMA}},
       {"exit", {TokenType::EXIT}},
       {"const", {TokenType::CONST}},
-      {"string", {TokenType::KEYWORD, "string"}}};
+      {"string", {TokenType::KEYWORD, "string"}},
+      {"void", {TokenType::KEYWORD, "void"}}};
+
   for (const auto &[map_view, map_token] : keyword_map) {
     if (map_view == value) {
       token = map_token;
@@ -257,6 +259,7 @@ bool Lexer::process_symbol(char c) {
   // ---------------------------------------------------------
   case '"':
     process_string_literal();
+
     return true;
 
   case '\'':

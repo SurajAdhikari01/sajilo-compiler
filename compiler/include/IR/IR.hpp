@@ -1,6 +1,7 @@
 #pragma once
 
-#include "statements/statements.hpp"
+class Parser;
+class CodeGenContext;
 class IR {
 public:
   IR() {}

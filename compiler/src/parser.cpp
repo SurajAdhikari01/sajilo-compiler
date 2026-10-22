@@ -1,5 +1,5 @@
 #include "parser.hpp"
-
+#include "IR/IR.hpp"
 #include "json.hpp"
 #include "statements/Exit.hpp"
 #include "statements/ExpressionStatement.hpp"
@@ -13,13 +13,14 @@
 #include "statements/Write.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
+#include "utils.hpp"
 #include <cstddef>
 #include <fstream>
 #include <memory>
 #include <sstream>
 void Parser::parse() {
 
-  for (; index < tokens.size(); ++index) {
+  while (is_valid()) {
     if (!add_statement(parse_statement())) {
       isInvalidSyntax = true;
       break;
@@ -36,7 +37,7 @@ void Parser::parse() {
 
   CodeGenContext context;
   if (!isInvalidSyntax) {
-
+    add_string_literal_instruction(context, *this);
     for (const auto &ptr : statements) {
       ptr->generate_ir(context, *this);
     }
@@ -110,3 +111,19 @@ std::unique_ptr<Statements> Parser::parse_statement() {
 void Parser::set_lexer(Lexer &lexer) { this->lexer = &lexer; }
 
 const Lexer &Parser::get_lexer() const { return *lexer; }
+
+bool Parser::add_statement(std::unique_ptr<Statements> statement) {
+
+  if (statement) {
+    statements.push_back(std::move(statement));
+    return true;
+  }
+  return false;
+}
+bool Parser::add_instruction(std::unique_ptr<IR> instr) {
+  if (instr) {
+    instructions.push_back(std::move(instr));
+    return true;
+  }
+  return false;
+}
