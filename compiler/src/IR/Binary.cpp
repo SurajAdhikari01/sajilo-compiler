@@ -8,3 +8,5 @@ void Binary::generate_ir(CodeGenContext &context, Parser &parser) {
   context.code << std::format("{} = {} {} {}\n", res, oprand_left,
                               get_symbol(bn_operator), oprand_right);
 }
+
+void Binary ::generate_code(CodeGenContext &context) {}

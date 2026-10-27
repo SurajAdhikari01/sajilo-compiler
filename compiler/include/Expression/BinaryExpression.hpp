@@ -6,7 +6,8 @@
 #include <memory>
 #include <string>
 #include <utility>
-enum class BN_OPERATORS {
+enum class BN_OPERATORS
+{
   NONE,
   ADDITION,
   SUBTRACTION,
@@ -30,8 +31,10 @@ enum class BN_OPERATORS {
   INDEXING,
   ARROW
 };
-inline std::string get_symbol(BN_OPERATORS bn_op) {
-  switch (bn_op) {
+inline std::string get_symbol(BN_OPERATORS bn_op)
+{
+  switch (bn_op)
+  {
   case BN_OPERATORS::NONE:
     return "";
   case BN_OPERATORS::ADDITION:
@@ -81,7 +84,8 @@ inline std::string get_symbol(BN_OPERATORS bn_op) {
   return "";
 }
 
-class BinaryExpression : public Expression {
+class BinaryExpression : public Expression
+{
 public:
   BinaryExpression() {};
   BinaryExpression(BN_OPERATORS bn_operators, std::unique_ptr<Expression> left,
@@ -92,7 +96,7 @@ public:
   virtual PRIMITIVE_DATA_TYPES get_primitive_type() override;
   virtual bool analyze_symantics(Parser &parser,
                                  const SourceLocation &) override;
-  virtual std::string generate_ir(CodeGenContext &context,
+  virtual std::string generate_ir(LabelCounters &context,
                                   Parser &parser) override;
 
   BN_OPERATORS bn_operators = BN_OPERATORS::NONE;

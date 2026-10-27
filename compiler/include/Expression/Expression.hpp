@@ -4,21 +4,24 @@
 #include <cstddef>
 #include <memory>
 class Parser;
-class Expression {
+class Expression
+{
 public:
   Expression() {}
   virtual ~Expression() = default;
   static std::unique_ptr<Expression> parse_expression(Parser &parser);
   static std::unique_ptr<Expression> pratt_expression(Parser &parser,
                                                       float min_bp);
-  virtual PRIMITIVE_DATA_TYPES get_primitive_type() {
+  virtual PRIMITIVE_DATA_TYPES get_primitive_type()
+  {
     return PRIMITIVE_DATA_TYPES::VOID;
   }
 
-  virtual bool analyze_symantics(Parser &parser, const SourceLocation &) {
+  virtual bool analyze_symantics(Parser &parser, const SourceLocation &)
+  {
     return true;
   };
-  virtual std::string generate_ir(CodeGenContext &, Parser &) { return ""; }
+  virtual std::string generate_ir(LabelCounters &, Parser &) { return ""; }
 
 private:
 };

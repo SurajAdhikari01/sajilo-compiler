@@ -51,10 +51,10 @@ bool BinaryExpression::analyze_symantics(Parser &parser,
   return true;
 }
 
-std::string BinaryExpression::generate_ir(CodeGenContext &context,
+std::string BinaryExpression::generate_ir(LabelCounters &counter,
                                           Parser &parser) {
-  auto l = left->generate_ir(context, parser);
-  auto r = right->generate_ir(context, parser);
+  auto l = left->generate_ir(counter, parser);
+  auto r = right->generate_ir(counter, parser);
 
   if (bn_operators == BN_OPERATORS::ASSIGN_TO) {
     auto exp = dynamic_cast<PrimaryExpression *>(left.get());
@@ -64,7 +64,7 @@ std::string BinaryExpression::generate_ir(CodeGenContext &context,
 
       parser.add_instruction(std::move(instr));
 
-      // context.code << exp->value << " = " << r << '\n';
+      // counter.code << exp->value << " = " << r << '\n';
       return exp_val;
     }
     return "";
@@ -73,8 +73,8 @@ std::string BinaryExpression::generate_ir(CodeGenContext &context,
   // t0 = left operator right;
   // int x = 10;
   // x = 20;
-  std::string temp = "t" + std::to_string(context.temp_label++);
-  // context.code << "t" << context.temp_label << " = " << l << " "
+  std::string temp = "t" + std::to_string(counter.temp_label++);
+  // counter.code << "t" << counter.temp_label << " = " << l << " "
   //              << get_symbol(bn_operators) << " " << r << '\n';
   auto instr = std::make_unique<Binary>(bn_operators, l, r, temp);
 

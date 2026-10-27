@@ -38,27 +38,27 @@ std::unique_ptr<Statements> Write::parse_write(Parser &parser) {
   return write_stmt;
 }
 
-void Write::generate_ir(CodeGenContext &context, Parser &parser) {
+void Write::generate_ir(LabelCounters &counter, Parser &parser) {
   {
-    auto exp = variable->generate_ir(context, parser);
+    auto exp = variable->generate_ir(counter, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(variable.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate_ir(context, parser);
+      exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
     parser.add_instruction(std::make_unique<Param>(exp));
   }
   {
-    auto exp = length->generate_ir(context, parser);
+    auto exp = length->generate_ir(counter, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(length.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate_ir(context, parser);
+      exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
     parser.add_instruction(std::make_unique<Param>(exp));
   }
 
-  parser.add_instruction(std::make_unique<FunctionCall>("__sys_write()"));
+  parser.add_instruction(std::make_unique<FunctionCall>("__sys_write"));
 }
 
 bool Write::analyze_semantics(Parser &parser) {

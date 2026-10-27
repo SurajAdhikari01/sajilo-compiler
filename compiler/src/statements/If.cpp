@@ -60,12 +60,12 @@ bool If::analyze_semantics(Parser &parser) {
   return if_val && else_block->analyze_semantics(parser);
 }
 
-void If::generate_ir(CodeGenContext &context, Parser &parser) {
+void If::generate_ir(LabelCounters &counter, Parser &parser) {
 
-  auto cond = condition->generate_ir(context, parser);
-  auto then_level = context.block_label++;
-  auto else_level = else_block ? context.block_label++ : 0;
-  auto end_level = context.block_label++;
+  auto cond = condition->generate_ir(counter, parser);
+  auto then_level = counter.block_label++;
+  auto else_level = else_block ? counter.block_label++ : 0;
+  auto end_level = counter.block_label++;
   auto false_cond = else_block ? else_level : end_level;
 
   auto temp_str = 'b' + std::to_string(false_cond);
@@ -73,8 +73,8 @@ void If::generate_ir(CodeGenContext &context, Parser &parser) {
   temp_str = 'b' + std::to_string(then_level);
   parser.add_instruction(std::make_unique<Label>(temp_str));
 
-  if_block->generate_ir(context, parser);
-  // context.code << "jmp b" << end_level << '\n';
+  if_block->generate_ir(counter, parser);
+  // counter.code << "jmp b" << end_level << '\n';
   temp_str = 'b' + std::to_string(end_level);
   parser.add_instruction(std::make_unique<Jump>(temp_str));
 
@@ -82,12 +82,12 @@ void If::generate_ir(CodeGenContext &context, Parser &parser) {
     temp_str = 'b' + std::to_string(else_level);
     parser.add_instruction(std::make_unique<Label>(temp_str));
 
-    else_block->generate_ir(context, parser);
+    else_block->generate_ir(counter, parser);
     temp_str = 'b' + std::to_string(end_level);
     parser.add_instruction(std::make_unique<Jump>(temp_str));
   }
   temp_str = 'b' + std::to_string(end_level);
   parser.add_instruction(std::make_unique<Label>(temp_str));
 
-  // context.code << 'b' << end_level << ":\n";
+  // counter.code << 'b' << end_level << ":\n";
 }

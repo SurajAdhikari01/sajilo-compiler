@@ -105,12 +105,11 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
   return func_stmt;
 }
 
-void Function::generate_ir(CodeGenContext &context, Parser &parser) {
+void Function::generate_ir(LabelCounters &counter, Parser &parser) {
   auto lable_instr =
       std::make_unique<Label>(generate_function_label(func_name, parameters));
   parser.add_instruction(std::move(lable_instr));
-  CodeGenContext func_context;
-  body->generate_ir(func_context, parser);
+  body->generate_ir(counter, parser);
 }
 
 bool Function::analyze_semantics(Parser &parser) {

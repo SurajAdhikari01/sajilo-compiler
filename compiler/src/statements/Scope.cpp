@@ -21,9 +21,9 @@ std::unique_ptr<Statements> Scope::parse_scope(Parser &parser) {
   return scope_stmt;
 };
 
-void Scope::generate_ir(CodeGenContext &context, Parser &parser) {
+void Scope::generate_ir(LabelCounters &counter, Parser &parser) {
   for (const auto &stmt : statements) {
-    stmt->generate_ir(context, parser);
+    stmt->generate_ir(counter, parser);
   }
 };
 

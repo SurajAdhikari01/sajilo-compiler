@@ -5,7 +5,8 @@
 #include <format>
 #include <iostream>
 
-void print_error(Parser &parser, std::string_view error_msg) {
+void print_error(Parser &parser, std::string_view error_msg)
+{
   const auto &current_token = parser.current_token();
   const auto code = parser.get_lexer().get_code_line(current_token.line_number);
   const auto filename = parser.get_lexer().get_filename();
@@ -20,7 +21,8 @@ void print_error(Parser &parser, std::string_view error_msg) {
 };
 
 void print_error(Parser &parser, std::string_view error_msg,
-                 const SourceLocation &loc) {
+                 const SourceLocation &loc)
+{
   const auto code = parser.get_lexer().get_code_line(loc.line);
   const auto filename = parser.get_lexer().get_filename();
   std::string message =
@@ -32,8 +34,10 @@ void print_error(Parser &parser, std::string_view error_msg,
   std::cout << message << "\n";
   parser.append_error_message(message);
 }
-void add_string_literal_instruction(CodeGenContext &context, Parser &parser) {
-  for (size_t i = 0; i < str_datas.size(); i++) {
+void add_string_literal_instruction(LabelCounters &counter, Parser &parser)
+{
+  for (size_t i = 0; i < str_datas.size(); i++)
+  {
     auto temp_str_index = "str" + std::to_string(i);
 
     auto instr =

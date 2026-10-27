@@ -1,31 +1,37 @@
+str0: "suraj"
+
+main(int,int):
 test = 10
 a = 1
 b = 2
 t0 = a + b
 if false t0 jmp b1
+
 b0:
 t1 = a + b
-param test
-return
+return test
 t2 = a + b
 if false t2 jmp b4
+
 b3:
 t3 = a + b
-param test
-return
+return test
 jmp b5
+
 b4:
 jmp b5
+
 b5:
 jmp b2
+
 b1:
 jmp b2
+
 b2:
 t4 = a + b
-param test
-return
+return test
 number = 10
-buffer = suraj
+buffer = str0
 param buffer
 param number
 call __sys_read()

@@ -9,6 +9,7 @@
 #include <utility>
 #include <vector>
 struct CodeGenContext;
+struct LabelCounters;
 enum class PRIMITIVE_DATA_TYPES {
   INT,
   CHAR,
@@ -125,4 +126,6 @@ inline size_t store_string_literal(std::string_view str_data) {
   return str_datas.size() - 1;
 }
 
-void add_string_literal_instruction(CodeGenContext &context, Parser &parser);
+void add_string_literal_instruction(LabelCounters &counter, Parser &parser);
+
+void add_system_call(CodeGenContext &);

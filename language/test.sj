@@ -3,7 +3,7 @@ manau int x ;
 #manau int number = 10;
  # write(a + b, buffer_len);
  manau int test = 10;
- manau int a=1
+ manau int a=1;
  manau int b=2;
 
 

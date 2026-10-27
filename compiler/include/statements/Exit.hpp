@@ -5,10 +5,11 @@
 #include <cstddef>
 #include <memory>
 class Parser;
-class Exit : public Statements {
+class Exit : public Statements
+{
 public:
   static std::unique_ptr<Statements> parse_exit(Parser &parser);
-  virtual void generate_ir(CodeGenContext &, Parser &) override;
+  virtual void generate_ir(LabelCounters &, Parser &) override;
 
   virtual bool analyze_semantics(Parser &parser) override;
 

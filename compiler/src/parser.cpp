@@ -36,18 +36,26 @@ void Parser::parse() {
   }
 
   CodeGenContext context;
+  LabelCounters counter;
   if (!isInvalidSyntax) {
-    add_string_literal_instruction(context, *this);
+    add_string_literal_instruction(counter, *this);
     for (const auto &ptr : statements) {
-      ptr->generate_ir(context, *this);
+      ptr->generate_ir(counter, *this);
     }
     for (const auto &instr : instructions) {
-      instr->generate_ir(context, *this);
+      // instr->generate_ir(context, *this);
+      instr->generate_code(context);
     }
   }
 
   std::stringstream ss;
-  ss << context.code.str();
+  {
+    ss << "section .data\n"
+       << context.data.str() << "\n\n"
+       << "section .text\n"
+       << "global _start\n\n"
+       << context.code.str();
+  }
   if (!output_file.empty() && output_format != OUTPUT_FORMAT::none) {
     std::ofstream file(output_file);
     if (!file.is_open()) {

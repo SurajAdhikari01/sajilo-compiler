@@ -31,16 +31,16 @@ std::unique_ptr<Statements> Exit::parse_exit(Parser &parser) {
   return exit_stmt;
 }
 
-void Exit::generate_ir(CodeGenContext &context, Parser &parser) {
-  auto exp = exit_expr->generate_ir(context, parser);
+void Exit::generate_ir(LabelCounters &counter, Parser &parser) {
+  auto exp = exit_expr->generate_ir(counter, parser);
   if (auto binaryExpr = dynamic_cast<BinaryExpression *>(exit_expr.get());
       binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-    exp = binaryExpr->left->generate_ir(context, parser);
+    exp = binaryExpr->left->generate_ir(counter, parser);
   }
   parser.add_instruction(std::make_unique<Param>(exp));
-  parser.add_instruction(std::make_unique<FunctionCall>("sys_exit"));
+  parser.add_instruction(std::make_unique<FunctionCall>("__sys_exit"));
 
-  // context.code << "param " << exp << '\n'
+  // counter.code << "param " << exp << '\n'
   //              << "sys_exit()\n";
 }
 bool Exit::analyze_semantics(Parser &parser) {

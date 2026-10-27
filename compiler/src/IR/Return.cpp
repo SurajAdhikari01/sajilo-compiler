@@ -4,3 +4,7 @@
 void Return::generate_ir(CodeGenContext &context, Parser &parser) {
   context.code << "return " << argument << '\n';
 }
+
+void Return ::generate_code(CodeGenContext &context) {
+  context.code << "ret\n";
+}

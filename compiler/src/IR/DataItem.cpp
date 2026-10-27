@@ -6,3 +6,7 @@ void DataItem::generate_ir(CodeGenContext &context, Parser &parser) {
 
   context.code << std::format("{}: \"{}\"\n", name, value);
 }
+
+void DataItem ::generate_code(CodeGenContext &context) {
+  context.data << std::format("{}: db \"{}\", 0\n", name, value);
+}

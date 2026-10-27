@@ -4,11 +4,13 @@
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include <string>
-class Param : public IR {
+class Param : public IR
+{
 public:
   Param(std::string argument) : argument(argument) {};
 
-  void generate_ir(CodeGenContext &, Parser &);
+  virtual void generate_ir(CodeGenContext &, Parser &) override;
 
+  virtual void generate_code(CodeGenContext &) override;
   std::string argument;
 };

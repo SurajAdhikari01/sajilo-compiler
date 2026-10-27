@@ -4,3 +4,5 @@
 void Param::generate_ir(CodeGenContext &context, Parser &parser) {
   context.code << std::format("param {}\n", argument);
 }
+
+void Param ::generate_code(CodeGenContext &context) {}

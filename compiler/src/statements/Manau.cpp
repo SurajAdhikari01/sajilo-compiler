@@ -49,15 +49,15 @@ std::unique_ptr<Statements> Manau::parse_manau(Parser &parser) {
 
   return manau_stmt;
 }
-void Manau::generate_ir(CodeGenContext &context, Parser &parser) {
+void Manau::generate_ir(LabelCounters &counter, Parser &parser) {
   if (!expr)
     return;
   // name = t0
-  auto exp = expr->generate_ir(context, parser);
+  auto exp = expr->generate_ir(counter, parser);
   auto exp_str = std::string(exp);
   auto instr = std::make_unique<Assign>(std::string(name), exp_str);
   parser.add_instruction(std::move(instr));
-  // context.code << name << " = " << exp << '\n';
+  // counter.code << name << " = " << exp << '\n';
 }
 
 bool Manau::analyze_semantics(Parser &parser) {

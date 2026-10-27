@@ -38,31 +38,31 @@ std::unique_ptr<Statements> Read::parse_read(Parser &parser) {
   }
   return read_stmt;
 }
-void Read::generate_ir(CodeGenContext &context, Parser &parser) {
+void Read::generate_ir(LabelCounters &counter, Parser &parser) {
   {
-    auto exp = variable->generate_ir(context, parser);
+    auto exp = variable->generate_ir(counter, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(variable.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate_ir(context, parser);
+      exp = binaryExpr->left->generate_ir(counter, parser);
     }
     parser.add_instruction(std::make_unique<Param>(exp));
 
-    // context.code << "param " << exp << '\n';
+    // counter.code << "param " << exp << '\n';
   }
   {
-    auto exp = length->generate_ir(context, parser);
+    auto exp = length->generate_ir(counter, parser);
     if (auto binaryExpr = dynamic_cast<BinaryExpression *>(length.get());
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-      exp = binaryExpr->left->generate_ir(context, parser);
+      exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
     parser.add_instruction(std::make_unique<Param>(exp));
 
-    // context.code << "param " << exp << '\n';
+    // counter.code << "param " << exp << '\n';
   }
-  parser.add_instruction(std::make_unique<FunctionCall>("__sys_read()"));
+  parser.add_instruction(std::make_unique<FunctionCall>("__sys_read"));
 
-  // context.code << "sys_read()\n";
+  // counter.code << "sys_read()\n";
 }
 bool Read::analyze_semantics(Parser &parser) {
   if (!variable->analyze_symantics(parser, location))

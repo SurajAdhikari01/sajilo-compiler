@@ -32,15 +32,15 @@ std::unique_ptr<Statements> ReturnStatement::parse_return(Parser &parser) {
   return return_stmt;
 }
 
-void ReturnStatement::generate_ir(CodeGenContext &context, Parser &parser) {
+void ReturnStatement::generate_ir(LabelCounters &counter, Parser &parser) {
 
-  auto exp = return_expr->generate_ir(context, parser);
+  auto exp = return_expr->generate_ir(counter, parser);
   if (auto binaryExpr = dynamic_cast<BinaryExpression *>(return_expr.get());
       binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
-    exp = binaryExpr->left->generate_ir(context, parser);
+    exp = binaryExpr->left->generate_ir(counter, parser);
   }
 
-  // context.code << "param " << exp << '\n'
+  // counter.code << "param " << exp << '\n'
   //              << "return()\n";
   //
   parser.add_instruction(std::make_unique<Return>(exp));

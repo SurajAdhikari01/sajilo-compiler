@@ -8,7 +8,7 @@ class Scope : public Statements
 {
 public:
   static std::unique_ptr<Statements> parse_scope(Parser &parser);
-  virtual void generate_ir(CodeGenContext &, Parser &) override;
+  virtual void generate_ir(LabelCounters &, Parser &) override;
 
   virtual bool analyze_semantics(Parser &parser) override;
 
