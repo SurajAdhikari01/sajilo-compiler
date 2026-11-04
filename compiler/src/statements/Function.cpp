@@ -1,6 +1,7 @@
 #include "statements/Function.hpp"
 #include "Error.hpp"
-#include "IR/Label.hpp"
+#include "IR/FunctionLabel.hpp"
+#include "IR/IRTable.hpp"
 #include "parser.hpp"
 #include "statements/Scope.hpp"
 #include "statements/statements.hpp"
@@ -106,10 +107,13 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
 }
 
 void Function::generate_ir(LabelCounters &counter, Parser &parser) {
-  auto lable_instr =
-      std::make_unique<Label>(generate_function_label(func_name, parameters));
+  auto lable_instr = std::make_unique<FunctionLabel>(
+      generate_function_label(func_name, parameters));
   parser.add_instruction(std::move(lable_instr));
+  FunctionData funcData;
+  counter.function_index = get_IR_Table().insert(funcData);
   body->generate_ir(counter, parser);
+  counter.function_index = -1;
 }
 
 bool Function::analyze_semantics(Parser &parser) {

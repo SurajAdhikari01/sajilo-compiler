@@ -8,5 +8,5 @@ void DataItem::generate_ir(CodeGenContext &context, Parser &parser) {
 }
 
 void DataItem ::generate_code(CodeGenContext &context) {
-  context.data << std::format("{}: db \"{}\", 0\n", name, value);
+  context.data << std::format("\t{}: db \"{}\", 0\n", name, value);
 }

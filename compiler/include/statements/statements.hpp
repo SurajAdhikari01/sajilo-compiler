@@ -17,6 +17,7 @@ struct LabelCounters {
   uint32_t temp_label = 0;
   uint32_t block_label = 0;
   uint32_t string_label = 0;
+  int32_t function_index = -1;
 };
 
 class Statements {

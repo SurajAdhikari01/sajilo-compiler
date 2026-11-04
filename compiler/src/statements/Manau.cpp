@@ -2,6 +2,7 @@
 #include "Error.hpp"
 #include "Expression/Expression.hpp"
 #include "IR/Assign.hpp"
+#include "IR/IRTable.hpp"
 #include "parser.hpp"
 #include "symbolTable.hpp"
 #include "token.hpp"
@@ -53,6 +54,7 @@ void Manau::generate_ir(LabelCounters &counter, Parser &parser) {
   if (!expr)
     return;
   // name = t0
+  auto func_data = get_IR_Table().lookup(counter.function_index);
   auto exp = expr->generate_ir(counter, parser);
   auto exp_str = std::string(exp);
   auto instr = std::make_unique<Assign>(std::string(name), exp_str);

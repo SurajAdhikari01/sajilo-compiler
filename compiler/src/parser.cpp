@@ -47,14 +47,15 @@ void Parser::parse() {
       instr->generate_code(context);
     }
   }
-
+  add_system_call(context);
   std::stringstream ss;
   {
     ss << "section .data\n"
        << context.data.str() << "\n\n"
        << "section .text\n"
        << "global _start\n\n"
-       << context.code.str();
+       << context.syscall.str() << "\n\n"
+       << context.code.str() << "\n";
   }
   if (!output_file.empty() && output_format != OUTPUT_FORMAT::none) {
     std::ofstream file(output_file);

@@ -113,11 +113,11 @@ generate_function_label(std::string_view name,
   for (size_t i = 0; i < parameters.size(); i++) {
     parameters_str += parameters[i].type.name;
     if (i < (parameters.size() - 1)) {
-      parameters_str += ',';
+      parameters_str += '$';
     }
   }
 
-  return std::format("{}({})", name, parameters_str);
+  return std::format("{}${}", name, parameters_str);
 }
 
 inline std::vector<std::string_view> str_datas;
