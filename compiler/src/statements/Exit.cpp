@@ -37,8 +37,9 @@ void Exit::generate_ir(LabelCounters &counter, Parser &parser) {
       binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
     exp = binaryExpr->left->generate_ir(counter, parser);
   }
-  parser.add_instruction(std::make_unique<Param>(exp));
-  parser.add_instruction(std::make_unique<FunctionCall>("__sys_exit"));
+  parser.add_instruction(std::make_unique<Param>(exp, counter.function_index));
+  parser.add_instruction(
+      std::make_unique<FunctionCall>("__sys_exit", counter.function_index));
 
   // counter.code << "param " << exp << '\n'
   //              << "sys_exit()\n";

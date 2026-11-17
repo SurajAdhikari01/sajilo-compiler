@@ -5,12 +5,11 @@
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include <string>
-class Binary : public IR
-{
+class Binary : public IR {
 public:
   Binary(BN_OPERATORS bn_operator, const std::string &oprand_left,
-         const std::string &oprand_right, const std::string &res)
-      : bn_operator(bn_operator), oprand_left(oprand_left),
+         const std::string &oprand_right, const std::string &res, int funcIndex)
+      : IR(funcIndex), bn_operator(bn_operator), oprand_left(oprand_left),
         oprand_right(oprand_right), res(res) {}
   virtual void generate_ir(CodeGenContext &, Parser &) override;
 

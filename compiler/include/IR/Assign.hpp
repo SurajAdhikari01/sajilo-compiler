@@ -4,11 +4,11 @@
 #include "statements/statements.hpp"
 #include <string>
 
-class Assign : public IR
-{
+class Assign : public IR {
 public:
-  Assign(const std::string &destination_op, const std::string &source_op)
-      : destination_op(destination_op), source_op(source_op) {}
+  Assign(const std::string &destination_op, const std::string &source_op,
+         int funcIndex)
+      : IR(funcIndex), destination_op(destination_op), source_op(source_op) {}
 
   virtual void generate_ir(CodeGenContext &, Parser &) override;
 

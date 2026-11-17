@@ -7,7 +7,8 @@
 
 struct VariableData {
   std::string name;
-  uint16_t size;
+  uint32_t size;
+  uint32_t offset;
 };
 struct FunctionData {
   uint32_t framesize{};

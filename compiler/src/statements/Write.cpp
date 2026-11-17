@@ -46,7 +46,8 @@ void Write::generate_ir(LabelCounters &counter, Parser &parser) {
       exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
-    parser.add_instruction(std::make_unique<Param>(exp));
+    parser.add_instruction(
+        std::make_unique<Param>(exp, counter.function_index));
   }
   {
     auto exp = length->generate_ir(counter, parser);
@@ -55,10 +56,12 @@ void Write::generate_ir(LabelCounters &counter, Parser &parser) {
       exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
-    parser.add_instruction(std::make_unique<Param>(exp));
+    parser.add_instruction(
+        std::make_unique<Param>(exp, counter.function_index));
   }
 
-  parser.add_instruction(std::make_unique<FunctionCall>("__sys_write"));
+  parser.add_instruction(
+      std::make_unique<FunctionCall>("__sys_write", counter.function_index));
 }
 
 bool Write::analyze_semantics(Parser &parser) {

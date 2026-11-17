@@ -45,7 +45,8 @@ void Read::generate_ir(LabelCounters &counter, Parser &parser) {
         binaryExpr && binaryExpr->bn_operators == BN_OPERATORS::ASSIGN_TO) {
       exp = binaryExpr->left->generate_ir(counter, parser);
     }
-    parser.add_instruction(std::make_unique<Param>(exp));
+    parser.add_instruction(
+        std::make_unique<Param>(exp, counter.function_index));
 
     // counter.code << "param " << exp << '\n';
   }
@@ -56,11 +57,13 @@ void Read::generate_ir(LabelCounters &counter, Parser &parser) {
       exp = binaryExpr->left->generate_ir(counter, parser);
     }
 
-    parser.add_instruction(std::make_unique<Param>(exp));
+    parser.add_instruction(
+        std::make_unique<Param>(exp, counter.function_index));
 
     // counter.code << "param " << exp << '\n';
   }
-  parser.add_instruction(std::make_unique<FunctionCall>("__sys_read"));
+  parser.add_instruction(
+      std::make_unique<FunctionCall>("__sys_read", counter.function_index));
 
   // counter.code << "sys_read()\n";
 }

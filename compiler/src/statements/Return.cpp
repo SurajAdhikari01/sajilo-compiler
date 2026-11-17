@@ -43,7 +43,7 @@ void ReturnStatement::generate_ir(LabelCounters &counter, Parser &parser) {
   // counter.code << "param " << exp << '\n'
   //              << "return()\n";
   //
-  parser.add_instruction(std::make_unique<Return>(exp));
+  parser.add_instruction(std::make_unique<Return>(exp, counter.function_index));
 };
 bool ReturnStatement::analyze_semantics(Parser &parser) {
   if (!return_expr->analyze_symantics(parser, location))

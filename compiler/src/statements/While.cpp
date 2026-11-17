@@ -54,9 +54,11 @@ void While::generate_ir(LabelCounters &counter, Parser &parser) {
   auto cond = condition->generate_ir(counter, parser);
 
   auto temp_str = 'b' + std::to_string(end_level);
-  parser.add_instruction(std::make_unique<CondJump>(cond, temp_str));
+  parser.add_instruction(
+      std::make_unique<CondJump>(cond, temp_str, counter.function_index));
   temp_str = 'b' + std::to_string(then_level);
-  parser.add_instruction(std::make_unique<Label>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Label>(temp_str, counter.function_index));
 
   // counter.code << "b" << cond_level << ":\n";
   // counter.code << "if " << cond << " jmp b" << then_level << "\njmp b"
@@ -65,10 +67,12 @@ void While::generate_ir(LabelCounters &counter, Parser &parser) {
 
   while_block->generate_ir(counter, parser);
   temp_str = 'b' + std::to_string(cond_level);
-  parser.add_instruction(std::make_unique<Jump>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Jump>(temp_str, counter.function_index));
 
   temp_str = 'b' + std::to_string(end_level);
-  parser.add_instruction(std::make_unique<Label>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Label>(temp_str, counter.function_index));
   // counter.code << "jmp b" << cond_level << '\n';
   //
   // counter.code << 'b' << end_level << ":\n";

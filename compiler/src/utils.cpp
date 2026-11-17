@@ -36,8 +36,8 @@ void add_string_literal_instruction(LabelCounters &counter, Parser &parser) {
   for (size_t i = 0; i < str_datas.size(); i++) {
     auto temp_str_index = "str." + std::to_string(i);
 
-    auto instr =
-        std::make_unique<DataItem>(temp_str_index, std::string(str_datas[i]));
+    auto instr = std::make_unique<DataItem>(temp_str_index,
+                                            std::string(str_datas[i]), -1);
     parser.add_instruction(std::move(instr));
   }
 }

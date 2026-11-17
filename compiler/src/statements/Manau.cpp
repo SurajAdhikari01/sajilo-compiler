@@ -55,9 +55,13 @@ void Manau::generate_ir(LabelCounters &counter, Parser &parser) {
     return;
   // name = t0
   auto func_data = get_IR_Table().lookup(counter.function_index);
+  func_data->variables.push_back(
+      {std::string(name), 8, func_data->framesize - 8});
+  func_data->framesize += 8;
   auto exp = expr->generate_ir(counter, parser);
   auto exp_str = std::string(exp);
-  auto instr = std::make_unique<Assign>(std::string(name), exp_str);
+  auto instr = std::make_unique<Assign>(std::string(name), exp_str,
+                                        counter.function_index);
   parser.add_instruction(std::move(instr));
   // counter.code << name << " = " << exp << '\n';
 }

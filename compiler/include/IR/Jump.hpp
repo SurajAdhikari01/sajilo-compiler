@@ -4,10 +4,10 @@
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include <string>
-class Jump : public IR
-{
+class Jump : public IR {
 public:
-  Jump(std::string destination) : destination(destination) {}
+  Jump(std::string destination, int funcIndex)
+      : IR(funcIndex), destination(destination) {}
 
   virtual void generate_ir(CodeGenContext &, Parser &) override;
 

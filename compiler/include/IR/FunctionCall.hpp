@@ -1,12 +1,13 @@
 #pragma once
 
+#include "IR/IR.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include <string>
-class FunctionCall : public IR
-{
+class FunctionCall : public IR {
 public:
-  FunctionCall(std::string functionName) : functionName(functionName) {}
+  FunctionCall(std::string functionName, int funcIndex)
+      : IR(funcIndex), functionName(functionName) {}
 
   virtual void generate_ir(CodeGenContext &, Parser &) override;
 

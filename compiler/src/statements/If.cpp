@@ -69,25 +69,31 @@ void If::generate_ir(LabelCounters &counter, Parser &parser) {
   auto false_cond = else_block ? else_level : end_level;
 
   auto temp_str = 'b' + std::to_string(false_cond);
-  parser.add_instruction(std::make_unique<CondJump>(cond, temp_str));
+  parser.add_instruction(
+      std::make_unique<CondJump>(cond, temp_str, counter.function_index));
   temp_str = 'b' + std::to_string(then_level);
-  parser.add_instruction(std::make_unique<Label>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Label>(temp_str, counter.function_index));
 
   if_block->generate_ir(counter, parser);
   // counter.code << "jmp b" << end_level << '\n';
   temp_str = 'b' + std::to_string(end_level);
-  parser.add_instruction(std::make_unique<Jump>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Jump>(temp_str, counter.function_index));
 
   if (else_block) {
     temp_str = 'b' + std::to_string(else_level);
-    parser.add_instruction(std::make_unique<Label>(temp_str));
+    parser.add_instruction(
+        std::make_unique<Label>(temp_str, counter.function_index));
 
     else_block->generate_ir(counter, parser);
     temp_str = 'b' + std::to_string(end_level);
-    parser.add_instruction(std::make_unique<Jump>(temp_str));
+    parser.add_instruction(
+        std::make_unique<Jump>(temp_str, counter.function_index));
   }
   temp_str = 'b' + std::to_string(end_level);
-  parser.add_instruction(std::make_unique<Label>(temp_str));
+  parser.add_instruction(
+      std::make_unique<Label>(temp_str, counter.function_index));
 
   // counter.code << 'b' << end_level << ":\n";
 }

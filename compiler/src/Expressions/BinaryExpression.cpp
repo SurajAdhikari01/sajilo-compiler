@@ -60,7 +60,7 @@ std::string BinaryExpression::generate_ir(LabelCounters &counter,
     auto exp = dynamic_cast<PrimaryExpression *>(left.get());
     if (exp) {
       auto exp_val = std::string(exp->value);
-      auto instr = std::make_unique<Assign>(exp_val, r);
+      auto instr = std::make_unique<Assign>(exp_val, r, counter.function_index);
 
       parser.add_instruction(std::move(instr));
 
@@ -76,7 +76,8 @@ std::string BinaryExpression::generate_ir(LabelCounters &counter,
   std::string temp = "t" + std::to_string(counter.temp_label++);
   // counter.code << "t" << counter.temp_label << " = " << l << " "
   //              << get_symbol(bn_operators) << " " << r << '\n';
-  auto instr = std::make_unique<Binary>(bn_operators, l, r, temp);
+  auto instr = std::make_unique<Binary>(bn_operators, l, r, temp,
+                                        counter.function_index);
 
   parser.add_instruction(std::move(instr));
 
