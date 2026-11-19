@@ -44,9 +44,11 @@ void Parser::parse() {
     }
     for (const auto &instr : instructions) {
       // instr->generate_ir(context, *this);
+
       instr->generate_code(context);
     }
   }
+
   add_system_call(context);
   std::stringstream ss;
   {

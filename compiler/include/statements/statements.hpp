@@ -10,6 +10,7 @@ struct CodeGenContext {
   std::stringstream rodata;
   std::stringstream bss;
   std::stringstream syscall;
+  int arg_index = 0;
 };
 
 struct LabelCounters {

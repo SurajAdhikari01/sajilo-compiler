@@ -108,9 +108,11 @@ std::unique_ptr<Statements> Function::parse_function(Parser &parser) {
 
 void Function::generate_ir(LabelCounters &counter, Parser &parser) {
   FunctionData funcData;
+  auto func_label = generate_function_label(func_name, parameters);
+  funcData.funcName = func_label;
   counter.function_index = get_IR_Table().insert(funcData);
-  auto lable_instr = std::make_unique<FunctionLabel>(
-      generate_function_label(func_name, parameters), counter.function_index);
+  auto lable_instr =
+      std::make_unique<FunctionLabel>(func_label, counter.function_index);
   parser.add_instruction(std::move(lable_instr));
   body->generate_ir(counter, parser);
   counter.function_index = -1;

@@ -1,4 +1,5 @@
 #include "utils.hpp"
+#include "IR/IRTable.hpp"
 #include "parser.hpp"
 #include "statements/statements.hpp"
 #include "token.hpp"
@@ -42,16 +43,21 @@ void add_string_literal_instruction(LabelCounters &counter, Parser &parser) {
   }
 }
 void add_system_call(CodeGenContext &context) {
-  context.syscall << std::format(
-      "_start:\n\tand rsp, -16\n\tcall main:\n\tsyscall\n\tret\n\tmov rdi, "
-      "rax\n\tsyscall\n\tret\n\t__sys_exit\n\n");
+  auto funcData = get_IR_Table().lookup("main$");
+  if (!funcData)
+    return;
+  auto temp_framesize = (funcData->framesize / 8 + 1) * 16;
+  context.syscall << std::format("_start:\n\tand rsp, -{}\n\tcall "
+                                 "main$\n\n\tmov rdi, "
+                                 "rax\n\tcall __sys_exit\n\tret\n",
+                                 temp_framesize);
   context.syscall << std::format(
       "__sys_exit:\n\tmov rax, 60\n\tsyscall\n\tret\n\n");
 
   context.syscall << std::format(
-      "__sys_read:\n\tmov rdx, rsi\n\tmov rsi, rdi\n\tmov rdi, 1\n\tmov rax, "
-      "1\n\tsyscall\n\tret\n\n");
-  context.syscall << std::format(
-      "__sys_write:\n\tmov rdx, rsi\n\tmov rsi, rdi\n\tmov rdi, 0\n\tmov rax, "
+      "__sys_read:\n\tmov rdx, rsi\n\tmov rsi, rdi\n\tmov rdi, 0\n\tmov rax, "
       "0\n\tsyscall\n\tret\n\n");
+  context.syscall << std::format(
+      "__sys_write:\n\tmov rdx, rsi\n\tmov rsi, rdi\n\tmov rdi, 1\n\tmov rax, "
+      "1\n\tsyscall\n\tret\n\n");
 }
